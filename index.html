@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Berliner Fresskorb — Kuratierte Eßwaren · Hochzeitsgeschenk</title>
+<meta name="description" content="Ein kuratierter Fresskorb aus seltenen, besonderen Esswaren — handverlesen in physischen Läden quer durch Berlin. Stelle Kombinationen zusammen und vergleiche Preise." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Hanken+Grotesk:wght@300..800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<style>
+  :root{
+    --paper:#f3ead7;
+    --paper-2:#ece0c6;
+    --ink:#211d17;
+    --ink-soft:#4f4636;
+    --oxblood:#7c2330;
+    --oxblood-dk:#5d171f;
+    --ochre:#b67c14;
+    --forest:#33503c;
+    --line:#cabd9d;
+    --line-dk:#b3a47e;
+    --shadow:rgba(33,29,23,.18);
+    --display:"Fraunces", Georgia, serif;
+    --body:"Hanken Grotesk", system-ui, sans-serif;
+    --mono:"Space Mono", ui-monospace, monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--body);
+    font-weight:400;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  /* paper grain + vignette */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    mix-blend-mode:multiply;opacity:.6;
+  }
+  body::after{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(120% 80% at 50% 0%,transparent 60%,rgba(33,29,23,.10) 100%);
+  }
+  .wrap{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:0 22px}
+
+  a{color:inherit}
+  ::selection{background:var(--oxblood);color:var(--paper)}
+
+  /* ---------- Masthead ---------- */
+  .masthead{padding:30px 0 14px;text-align:center}
+  .edition{
+    font-family:var(--mono);font-size:11px;letter-spacing:.42em;text-transform:uppercase;
+    color:var(--oxblood);display:flex;justify-content:center;gap:18px;flex-wrap:wrap;
+    border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);
+    padding:7px 0;margin-bottom:18px;
+  }
+  .edition span{white-space:nowrap}
+  .masthead h1{
+    font-family:var(--display);font-optical-sizing:auto;
+    font-weight:600;font-size:clamp(46px,11vw,128px);line-height:.86;
+    letter-spacing:-.02em;margin:.06em 0 .04em;
+    text-transform:uppercase;
+    background:linear-gradient(180deg,var(--ink) 0%, #2c261c 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .masthead h1 em{font-style:italic;font-weight:500;color:var(--oxblood);-webkit-text-fill-color:var(--oxblood)}
+  .dek{
+    font-family:var(--display);font-style:italic;font-weight:400;
+    font-size:clamp(16px,2.3vw,23px);color:var(--ink-soft);max-width:640px;margin:6px auto 0;
+  }
+  .rule-fancy{display:flex;align-items:center;justify-content:center;gap:14px;margin:18px auto 4px;color:var(--line-dk)}
+  .rule-fancy::before,.rule-fancy::after{content:"";height:1px;background:var(--line-dk);width:min(34vw,300px)}
+  .rule-fancy svg{width:26px;height:26px;color:var(--oxblood)}
+  .standfirst{max-width:680px;margin:16px auto 0;text-align:center;color:var(--ink-soft);font-size:15.5px}
+  .standfirst b{color:var(--ink);font-weight:600}
+
+  /* ---------- Section headers ---------- */
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin:46px 0 18px}
+  .sec-head .kicker{
+    font-family:var(--mono);font-size:11px;letter-spacing:.34em;text-transform:uppercase;
+    color:var(--paper);background:var(--oxblood);padding:5px 10px;white-space:nowrap;
+  }
+  .sec-head h2{
+    font-family:var(--display);font-weight:560;font-size:clamp(24px,3.4vw,34px);
+    letter-spacing:-.01em;margin:0;line-height:1;
+  }
+  .sec-head .fill{flex:1;height:1px;background:var(--line-dk);align-self:center}
+
+  /* ---------- Presets ---------- */
+  .presets{display:grid;grid-template-columns:repeat(auto-fit,minmax(218px,1fr));gap:14px}
+  .preset{
+    position:relative;text-align:left;cursor:pointer;border:1.5px solid var(--ink);
+    background:var(--paper-2);padding:16px 16px 15px;border-radius:2px;
+    transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .18s,background .18s;
+    box-shadow:3px 3px 0 rgba(33,29,23,.0);font-family:var(--body);color:var(--ink);
+  }
+  .preset:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+  .preset.active{background:var(--ink);color:var(--paper);box-shadow:5px 5px 0 var(--oxblood)}
+  .preset.active .p-meta,.preset.active .p-why{color:var(--paper-2)}
+  .preset.active .p-price{color:var(--paper);border-color:var(--paper)}
+  .preset .p-no{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--oxblood)}
+  .preset.active .p-no{color:#e7a6ad}
+  .preset h3{font-family:var(--display);font-weight:580;font-size:21px;line-height:1.04;margin:3px 0 6px}
+  .preset .p-why{font-size:13px;line-height:1.42;color:var(--ink-soft);min-height:54px}
+  .preset .p-meta{display:flex;justify-content:space-between;align-items:center;margin-top:11px;
+    font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--ink-soft)}
+  .preset .p-price{font-weight:700;color:var(--oxblood);border:1px solid var(--oxblood);padding:2px 7px;border-radius:2px}
+
+  /* ---------- Main layout ---------- */
+  .main{display:grid;grid-template-columns:1fr 348px;gap:30px;align-items:start;margin-top:30px}
+  @media(max-width:980px){.main{grid-template-columns:1fr}}
+
+  /* filter chips */
+  .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+  .chip{
+    font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    border:1px solid var(--line-dk);background:transparent;color:var(--ink-soft);
+    padding:6px 11px;border-radius:20px;cursor:pointer;transition:all .15s;
+  }
+  .chip:hover{border-color:var(--ink);color:var(--ink)}
+  .chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+  /* catalog grid */
+  .catalog{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  @media(max-width:560px){.catalog{grid-template-columns:1fr}}
+  .card{
+    position:relative;border:1px solid var(--line-dk);background:var(--paper-2);
+    padding:15px 15px 14px;border-radius:2px;cursor:pointer;overflow:hidden;
+    transition:transform .16s,box-shadow .16s,border-color .16s;
+    display:flex;flex-direction:column;
+  }
+  .card:hover{transform:translateY(-2px);box-shadow:0 6px 16px var(--shadow);border-color:var(--ink)}
+  .card.sel{border-color:var(--oxblood);background:#f7efde;box-shadow:0 0 0 1.5px var(--oxblood) inset}
+  .card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .cat-tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;
+    padding:3px 7px;border-radius:2px;color:var(--paper);white-space:nowrap}
+  .card h3{font-family:var(--display);font-weight:560;font-size:18.5px;line-height:1.08;margin:9px 0 0}
+  .card .blurb{font-size:13px;color:var(--ink-soft);line-height:1.4;margin:7px 0 10px;flex:1}
+  .card .shop{font-family:var(--mono);font-size:11px;color:var(--ink);letter-spacing:.01em;
+    display:flex;align-items:center;gap:6px;margin-top:auto}
+  .card .shop .dot{width:7px;height:7px;border-radius:50%;flex:none}
+  .card .dist{color:var(--ink-soft)}
+  .card .price-row{display:flex;justify-content:space-between;align-items:center;margin-top:11px;
+    border-top:1px dashed var(--line-dk);padding-top:9px}
+  .card .price{font-family:var(--mono);font-weight:700;font-size:16px;color:var(--oxblood)}
+  .toggle{
+    font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+    border:1.5px solid var(--ink);background:var(--paper);color:var(--ink);
+    padding:6px 12px;border-radius:2px;cursor:pointer;transition:all .15s;white-space:nowrap;
+  }
+  .card.sel .toggle{background:var(--oxblood);border-color:var(--oxblood);color:var(--paper)}
+  .card .chk{position:absolute;top:0;right:0;width:0;height:0;border-style:solid;
+    border-width:0 34px 34px 0;border-color:transparent var(--oxblood) transparent transparent;
+    opacity:0;transform:scale(.4);transform-origin:top right;transition:.18s}
+  .card.sel .chk{opacity:1;transform:scale(1)}
+  .card .chk::after{content:"✓";position:absolute;top:1px;right:-31px;color:var(--paper);font-size:13px;font-weight:700}
+
+  /* ---------- Receipt / basket ---------- */
+  .basket-col{position:sticky;top:16px}
+  .receipt{
+    background:var(--paper);border:1.5px solid var(--ink);border-radius:2px;
+    box-shadow:6px 6px 0 var(--ink);
+  }
+  .receipt .r-head{background:var(--ink);color:var(--paper);padding:14px 16px;text-align:center}
+  .receipt .r-head .mark{font-family:var(--mono);font-size:10px;letter-spacing:.4em;color:#e7a6ad}
+  .receipt .r-head h3{font-family:var(--display);font-weight:560;font-size:22px;margin:3px 0 0;letter-spacing:.01em}
+  .receipt .r-sub{font-family:var(--mono);font-size:10.5px;color:var(--paper-2);margin-top:2px}
+  .why-box{padding:13px 16px;border-bottom:1px dashed var(--line-dk);background:var(--paper-2)}
+  .why-box .wb-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--oxblood)}
+  .why-box .wb-txt{font-family:var(--display);font-style:italic;font-size:14.5px;line-height:1.4;color:var(--ink);margin-top:4px}
+  .r-lines{padding:6px 16px;max-height:300px;overflow-y:auto}
+  .r-lines::-webkit-scrollbar{width:6px}
+  .r-lines::-webkit-scrollbar-thumb{background:var(--line-dk);border-radius:3px}
+  .r-empty{text-align:center;color:var(--ink-soft);font-style:italic;font-family:var(--display);padding:26px 8px;font-size:15px}
+  .r-line{display:flex;justify-content:space-between;gap:10px;align-items:baseline;
+    font-family:var(--mono);font-size:12px;padding:7px 0;border-bottom:1px dotted var(--line)}
+  .r-line:last-child{border-bottom:none}
+  .r-line .rl-name{color:var(--ink);line-height:1.3}
+  .r-line .rl-name b{font-weight:400}
+  .r-line .rl-shop{color:var(--ink-soft);font-size:10px;display:block;margin-top:1px}
+  .r-line .rl-x{color:var(--oxblood);cursor:pointer;font-weight:700;padding:0 2px;user-select:none}
+  .r-line .rl-x:hover{background:var(--oxblood);color:var(--paper)}
+  .r-line .rl-price{color:var(--ink);white-space:nowrap;font-weight:700}
+  .r-totals{padding:12px 16px;border-top:2px solid var(--ink);font-family:var(--mono)}
+  .r-totals .row{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-soft);padding:3px 0}
+  .r-totals .grand{display:flex;justify-content:space-between;align-items:baseline;
+    margin-top:8px;padding-top:9px;border-top:1px dashed var(--line-dk)}
+  .r-totals .grand .lbl{font-family:var(--display);font-weight:600;font-size:18px;color:var(--ink)}
+  .r-totals .grand .amt{font-family:var(--mono);font-weight:700;font-size:26px;color:var(--oxblood)}
+  .r-totals .grand .amt.flash{animation:flash .4s}
+  @keyframes flash{0%{transform:scale(1.18);color:var(--ochre)}100%{transform:scale(1)}}
+  .route-note{font-family:var(--body);font-size:12px;color:var(--ink-soft);
+    padding:11px 16px;border-top:1px dashed var(--line-dk);line-height:1.45}
+  .route-note b{color:var(--ink)}
+  .split{font-family:var(--mono);font-size:11px;color:var(--forest);margin-top:5px}
+  .r-actions{display:flex;gap:8px;padding:0 16px 15px}
+  .btn{flex:1;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    padding:9px;border-radius:2px;cursor:pointer;transition:all .15s;border:1.5px solid var(--ink)}
+  .btn.ghost{background:transparent;color:var(--ink)}
+  .btn.ghost:hover{background:var(--ink);color:var(--paper)}
+  .btn.fill{background:var(--oxblood);border-color:var(--oxblood);color:var(--paper)}
+  .btn.fill:hover{background:var(--oxblood-dk);border-color:var(--oxblood-dk)}
+  .perforation{height:10px;background:
+    radial-gradient(circle at 6px -2px,transparent 5px,var(--ink) 5px 6px,transparent 6px) repeat-x;
+    background-size:12px 10px;opacity:.0}
+
+  /* ---------- Map ---------- */
+  .map-shell{border:1.5px solid var(--ink);border-radius:2px;overflow:hidden;box-shadow:6px 6px 0 var(--ink);margin-top:6px}
+  #map{height:480px;width:100%;background:var(--paper-2);filter:saturate(.78)}
+  .leaflet-container{font-family:var(--body)}
+  .leaflet-popup-content-wrapper{border-radius:2px;border:1.5px solid var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .leaflet-popup-content{margin:11px 13px;font-family:var(--body)}
+  .pop h4{font-family:var(--display);font-weight:600;font-size:16px;margin:0 0 2px}
+  .pop .pa{font-family:var(--mono);font-size:10.5px;color:var(--ink-soft);margin-bottom:6px}
+  .pop ul{margin:5px 0 0;padding-left:15px;font-size:12px}
+  .pop ul li{margin:2px 0}
+  .pop .none{font-size:12px;color:var(--ink-soft);font-style:italic}
+  .map-legend{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;
+    color:var(--ink-soft);margin:12px 2px 0}
+  .map-legend span{display:flex;align-items:center;gap:7px}
+  .lg-dot{width:13px;height:13px;border-radius:50%;border:1.5px solid var(--ink)}
+
+  /* ---------- footer ---------- */
+  footer{margin:60px 0 40px;text-align:center;color:var(--ink-soft);
+    border-top:1.5px solid var(--ink);padding-top:18px}
+  footer .fmark{font-family:var(--mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--oxblood)}
+  footer p{font-size:13px;max-width:600px;margin:8px auto 0;line-height:1.5}
+  footer .disc{font-size:11.5px;color:var(--line-dk);margin-top:12px;font-style:italic}
+
+  /* mobile basket bar */
+  .mobar{display:none}
+  @media(max-width:980px){
+    .basket-col{position:static}
+    .main{margin-bottom:78px}
+  }
+  /* staggered load */
+  .reveal{opacity:0;transform:translateY(14px);animation:rise .7s cubic-bezier(.2,.8,.2,1) forwards}
+  @keyframes rise{to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ======= MASTHEAD ======= -->
+  <header class="masthead">
+    <div class="edition reveal">
+      <span>Ausgabe · Juni 2026</span>
+      <span>Ein Hochzeitsgeschenk</span>
+      <span>Von Zweien · Aus Berlin</span>
+    </div>
+    <h1 class="reveal" style="animation-delay:.05s">Berliner <em>Fresskorb</em></h1>
+    <p class="dek reveal" style="animation-delay:.12s">Kein fertiges Körbchen von der Stange — sondern handverlesene, seltene Eßwaren, zusammengetragen in echten Läden quer durch die Stadt.</p>
+    <div class="rule-fancy reveal" style="animation-delay:.16s">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9h18l-1.4 9.2a2 2 0 0 1-2 1.8H6.4a2 2 0 0 1-2-1.8L3 9Z"/><path d="M7 9 9.5 4M17 9 14.5 4"/><path d="M9 13v3M12 13v3M15 13v3"/></svg>
+    </div>
+    <p class="standfirst reveal" style="animation-delay:.2s">Wähle aus <b>21 besonderen Stücken</b> von Kaviar bis Stadthonig. Lade einen der fünf <b>vorgeschlagenen Körbe</b> oder kombiniere frei — die Summe und die Einkaufsroute rechnen sich <b>live</b> mit.</p>
+  </header>
+
+  <!-- ======= PRESETS ======= -->
+  <div class="sec-head">
+    <span class="kicker">Vorschläge</span>
+    <h2>Fünf kuratierte Körbe</h2>
+    <span class="fill"></span>
+  </div>
+  <div class="presets" id="presets"></div>
+
+  <!-- ======= MAIN ======= -->
+  <div class="main">
+    <div class="catalog-col">
+      <div class="sec-head" style="margin-top:8px">
+        <span class="kicker">Sortiment</span>
+        <h2>Die Auswahl</h2>
+        <span class="fill"></span>
+      </div>
+      <div class="filters" id="filters"></div>
+      <div class="catalog" id="catalog"></div>
+    </div>
+
+    <div class="basket-col">
+      <div class="receipt">
+        <div class="r-head">
+          <div class="mark">★ Quittung ★</div>
+          <h3 id="basketTitle">Dein Korb</h3>
+          <div class="r-sub" id="basketSub">noch leer</div>
+        </div>
+        <div class="why-box">
+          <div class="wb-lbl">Warum diese Kombination</div>
+          <div class="wb-txt" id="whyTxt">Tippe ein Stück an oder lade oben einen Vorschlag, um deinen Korb zu füllen.</div>
+        </div>
+        <div class="r-lines" id="rLines">
+          <div class="r-empty">— Keine Position —</div>
+        </div>
+        <div class="r-totals">
+          <div class="row"><span id="itemCountLbl">0 Positionen</span><span id="subAmt">0 €</span></div>
+          <div class="grand"><span class="lbl">Summe</span><span class="amt" id="grandAmt">0&nbsp;€</span></div>
+        </div>
+        <div class="route-note" id="routeNote">Noch keine Läden ausgewählt.</div>
+        <div class="r-actions">
+          <button class="btn ghost" id="clearBtn">Leeren</button>
+          <button class="btn fill" id="copyBtn">Korb kopieren</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= MAP ======= -->
+  <div class="sec-head">
+    <span class="kicker">Einkaufsroute</span>
+    <h2>Wo es zu holen ist</h2>
+    <span class="fill"></span>
+  </div>
+  <div class="map-shell">
+    <div id="map"></div>
+  </div>
+  <div class="map-legend">
+    <span><span class="lg-dot" style="background:var(--oxblood)"></span> Im Korb — hier einkaufen</span>
+    <span><span class="lg-dot" style="background:var(--paper-2)"></span> Verfügbar, nicht gewählt</span>
+    <span style="color:var(--ink-soft)">Klick auf eine Marke zeigt die gewählten Stücke des Ladens.</span>
+  </div>
+
+  <footer>
+    <div class="fmark">★ Guten Appetit & herzlichen Glückwunsch ★</div>
+    <p>Zusammengetragen von zweien, die zur Hochzeit nichts von der Stange schenken wollten. Alles aus Läden, die man in Berlin besuchen kann — nichts bestellt, alles erlebt.</p>
+    <p class="disc">Preise sind realistische Schätzwerte (Stand 2026) und können vor Ort abweichen. Öffnungszeiten vorher prüfen — manche Häuser (Maître Philippe, PSM, Stadthonig) haben besondere Zeiten.</p>
+  </footer>
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+/* ============ DATA ============ */
+const CATS = {
+  luxus:    {label:"Luxus",        color:"#7c2330"},
+  berlin:   {label:"Ur-Berlin",    color:"#33503c"},
+  suess:    {label:"Süßes",        color:"#b67c14"},
+  kaffee:   {label:"Kaffee & Tee", color:"#6b4226"},
+  spirit:   {label:"Spirituosen",  color:"#3a4a6b"},
+  pikant:   {label:"Pikant",       color:"#8a5a1e"},
+  welt:     {label:"Welt",         color:"#5a3d6b"},
+};
+
+const SHOPS = {
+  kadewe:   {name:"KaDeWe — Feinschmeckeretage", addr:"Tauentzienstr. 21–24, 10789", district:"Schöneberg", lat:52.5021, lng:13.3417},
+  rogacki:  {name:"Rogacki", addr:"Wilmersdorfer Str. 145/146, 10585", district:"Charlottenburg", lat:52.5106, lng:13.3070},
+  maitre:   {name:"Maître Philippe & Filles", addr:"Emser Str. 42, 10719", district:"Wilmersdorf", lat:52.4905, lng:13.3215},
+  goldhahn: {name:"Goldhahn und Sampson", addr:"Dunckerstr. 9, 10437", district:"Prenzlauer Berg", lat:52.5443, lng:13.4175},
+  sawade:   {name:"Sawade — Hackesche Höfe", addr:"Rosenthaler Str. 40–41, 10178", district:"Mitte", lat:52.5247, lng:13.4012},
+  belyzium: {name:"Belyzium", addr:"Lottumstr. 15, 10119", district:"Prenzlauer Berg", lat:52.5305, lng:13.4070},
+  thebarn:  {name:"The Barn — Rösterei", addr:"Auguststr. 58, 10119", district:"Mitte", lat:52.5258, lng:13.3962},
+  brand:    {name:"Berliner Brandstifter", addr:"Mauerstr. 80, 10117", district:"Mitte", lat:52.5108, lng:13.3865},
+  psm:      {name:"Preussische Spirituosen Manufaktur", addr:"Seestr. 13, 13353", district:"Wedding", lat:52.5430, lng:13.3460},
+  markthalle:{name:"Markthalle Neun", addr:"Eisenbahnstr. 42/43, 10997", district:"Kreuzberg", lat:52.5022, lng:13.4327},
+  ausberlin:{name:"ausberlin (Stadthonig)", addr:"Karl-Liebknecht-Str. 17, 10178", district:"Mitte", lat:52.5210, lng:13.4065},
+  myconbini:{name:"MYCONBINI", addr:"Linienstr. 225a, 10119", district:"Mitte", lat:52.5290, lng:13.4030},
+  pt:       {name:"Paper & Tea", addr:"Bleibtreustr. 4, 10623", district:"Charlottenburg", lat:52.5045, lng:13.3230},
+  oel:      {name:"OEL Berlin", addr:"Urbanstr. 71, 10967", district:"Kreuzberg", lat:52.4905, lng:13.4220},
+};
+
+// id, name, shop, cat, price, blurb
+const ITEMS = [
+  {id:"caviar",   name:"Oscietra-Stör-Kaviar, 30 g",        shop:"kadewe",   cat:"luxus",  price:120, blurb:"Frisch aus der Kaviar-Bar im sechsten Stock — die Krönung jedes Korbs, vor Ort probierbar."},
+  {id:"balsamico",name:"Aceto Balsamico Tradizionale DOP, 25 J.", shop:"kadewe", cat:"luxus", price:58, blurb:"Ein Vierteljahrhundert im Fass gereift, sirupdick, 100 ml in der versiegelten Flasche."},
+  {id:"salmon",   name:"Hausgeräucherter Wildlachs",         shop:"rogacki",  cat:"berlin", price:14, blurb:"Über eigenem Holz geräuchert in der legendären Räucherkammer von 1928."},
+  {id:"eel",      name:"Räucheraal aus eigener Räucherei",    shop:"rogacki",  cat:"berlin", price:28, blurb:"Die Spezialität des Hauses — eine West-Berliner Institution, online unkaufbar."},
+  {id:"sardines", name:"Jahrgangs-Sardinen (limitierte Dose)",shop:"maitre",   cat:"welt",   price:13, blurb:"Aus einer der größten Sammlungen Europas — Sardinen, die man wie Wein altert."},
+  {id:"comte",    name:"Affineur-Comté, 24 Monate",          shop:"maitre",   cat:"pikant", price:12, blurb:"Rohmilch-Comté vom Lyoner Spitzen-Affineur Janier, frisch am Stück geschnitten."},
+  {id:"pralines", name:"Sawade Pralinen-Ballotin",           shop:"sawade",   cat:"suess",  price:24, blurb:"Berlins älteste Pralinenmanufaktur (seit 1880), von Hand in den Hackeschen Höfen."},
+  {id:"belyzium", name:"Tree-to-Bar Tasting-Set",            shop:"belyzium", cat:"suess",  price:30, blurb:"Kakao aus eigenem Anbau in Belize, hier geröstet — die ganze Kette in einer Hand."},
+  {id:"barn",     name:"Single-Origin Filterkaffee, 250 g",  shop:"thebarn",  cat:"kaffee", price:16, blurb:"Heller Micro-Lot einer der angesehensten Röstereien Europas, voll rückverfolgbar."},
+  {id:"gin",      name:"Berlin Dry Gin, 0,7 l",              shop:"brand",    cat:"spirit", price:40, blurb:"Mit Berliner Botanicals, in der geprägten Siegelflasche — das giftigste Mitbringsel der Stadt."},
+  {id:"psm",      name:"Handgebrannter Gin / Korn, 0,5 l",   shop:"psm",      cat:"spirit", price:32, blurb:"Aus einer Brennerei von 1874, die einst Kaiser Wilhelm belieferte — von Hand abgefüllt."},
+  {id:"spice",    name:"SoulSpice Bio-Gewürz-Set",           shop:"markthalle",cat:"pikant",price:25, blurb:"Faire Bio-Gewürzmischungen vom Stand in der Markthalle — riechen & probieren inklusive."},
+  {id:"honey",    name:"Berliner Stadthonig, 3-Bezirke-Set", shop:"ausberlin",cat:"berlin", price:24, blurb:"Echter Honig aus Bienenstöcken mitten in Berlin — nach Bezirk und Tracht sortiert."},
+  {id:"salami",   name:"Dry-Aged Salami (Kumpel & Keule)",   shop:"markthalle",cat:"pikant",price:12, blurb:"Aus der gläsernen Handwerks-Metzgerei der Markthalle — ganzes Tier, lange gereift."},
+  {id:"panettone",name:"Panettone, natürlich gesäuert (Sironi)",shop:"markthalle",cat:"suess",price:26, blurb:"Ein Mailänder Bäcker backt ihn langsam mit eigenem Sauerteig — der echte, nicht der aus dem Karton."},
+  {id:"cheese",   name:"Rohmilch-Bergkäse am Stück",         shop:"markthalle",cat:"pikant",price:9,  blurb:"Affineur-gereift von kleinen Almen, frisch am Käsestand der Markthalle geschnitten."},
+  {id:"matcha",   name:"Ceremonial-Grade Matcha",            shop:"myconbini",cat:"welt",   price:32, blurb:"Echter Zeremonien-Matcha vom kuratierten japanischen Feinkostladen — nicht aus dem Asia-Markt."},
+  {id:"gyokuro",  name:"Single-Estate Gyokuro",              shop:"pt",       cat:"kaffee", price:28, blurb:"Schattengewachsener Edel-Grüntee von einem einzigen Gut, schön in der Dose verpackt."},
+  {id:"oel",      name:"Single-Estate Koroneiki Olivenöl, 0,5 l", shop:"oel", cat:"welt",   price:24, blurb:"Preisgekröntes Bio-Öl vom eigenen 300-Bäume-Hain bei Kalamata, voll rückverfolgbar."},
+  {id:"robertis", name:"De Robertis Coratina Olivenöl, 250 ml", shop:"goldhahn", cat:"welt", price:12, blurb:"Sortenreines apulisches Öl aus dem Slow-Food-Deli — grasig, scharf, charaktervoll."},
+  {id:"pepper",   name:"Wildpfeffer & seltene Salze",        shop:"goldhahn", cat:"pikant", price:14, blurb:"Esoterische Einzel-Ursprung-Gewürze aus dem Feinkost- & Kochbuchladen am Helmholtzplatz."},
+];
+
+const PRESETS = [
+  {id:"klassiker", name:"Der Ur-Berliner", items:["salmon","eel","gin","honey","pralines"],
+   why:"Fünf Häuser, die es nur hier gibt: Rogackis Räucherkammer von 1928, Sawades Pralinen seit 1880, Gin mit Berliner Botanicals und Honig aus Stadtbienen. Ein Korb, den man buchstäblich nirgends sonst auf der Welt packen kann."},
+  {id:"luxus", name:"Das Luxus-Körbchen", items:["caviar","balsamico","sardines","comte","gyokuro"],
+   why:"Die Spitze des Sortiments: frischer Stör-Kaviar, 25 Jahre gereifter Balsamico, Jahrgangs-Sardinen, Affineur-Comté und ein schattengewachsener Gyokuro. Lauter Dinge, die man vor dem Kauf an der Theke probiert."},
+  {id:"weltreise", name:"Die Genuss-Weltreise", items:["matcha","panettone","oel","sardines","spice"],
+   why:"Japan, Italien, Griechenland, die Bretagne — eine kulinarische Erdumrundung, in einer einzigen Stadt eingesammelt. Für ein Paar, das gern reist und am Tisch die Welt schmeckt."},
+  {id:"handwerk", name:"Der Handwerks-Korb", items:["barn","belyzium","salami","cheese","pepper"],
+   why:"Lauter Macher-Produkte mit gläserner Produktion: Bean-to-Bar-Schokolade aus eigenem Kakao, Tree-to-Cup-Kaffee, Ganztier-Wurst und Almkäse. Transparenz zum Anbeißen — und alles im Osten der Stadt beieinander."},
+  {id:"kleinfein", name:"Klein, fein & feierlich", items:["honey","sardines","robertis","pralines","cheese"],
+   why:"Ein bewusst schlanker Korb um die 80 € — und trotzdem kein einziges Stück von der Stange. Beweist, dass ein durchdachtes Geschenk nicht teuer sein muss, sondern besonders."},
+];
+
+/* ============ STATE ============ */
+const selected = new Set();
+let activePreset = null;
+const euro = n => n.toLocaleString("de-DE") + " €";
+
+/* ============ RENDER: presets ============ */
+const presetTotal = p => p.items.reduce((s,id)=> s + ITEMS.find(i=>i.id===id).price, 0);
+function renderPresets(){
+  document.getElementById("presets").innerHTML = PRESETS.map((p,i)=>`
+    <button class="preset reveal" data-preset="${p.id}" style="animation-delay:${.1+i*.05}s">
+      <div class="p-no">Vorschlag № ${i+1}</div>
+      <h3>${p.name}</h3>
+      <div class="p-why">${p.why}</div>
+      <div class="p-meta"><span>${p.items.length} Stücke</span><span class="p-price">${euro(presetTotal(p))}</span></div>
+    </button>`).join("");
+  document.querySelectorAll("[data-preset]").forEach(el=>{
+    el.addEventListener("click",()=>loadPreset(el.dataset.preset));
+  });
+}
+
+/* ============ RENDER: filters ============ */
+let activeFilter = "alle";
+function renderFilters(){
+  const cats = ["alle", ...Object.keys(CATS)];
+  document.getElementById("filters").innerHTML = cats.map(c=>{
+    const lbl = c==="alle" ? "Alles" : CATS[c].label;
+    return `<button class="chip ${c===activeFilter?"on":""}" data-filter="${c}">${lbl}</button>`;
+  }).join("");
+  document.querySelectorAll("[data-filter]").forEach(el=>{
+    el.addEventListener("click",()=>{activeFilter=el.dataset.filter;renderFilters();renderCatalog();});
+  });
+}
+
+/* ============ RENDER: catalog ============ */
+function renderCatalog(){
+  const list = ITEMS.filter(it=> activeFilter==="alle" || it.cat===activeFilter);
+  document.getElementById("catalog").innerHTML = list.map((it,i)=>{
+    const s = SHOPS[it.shop], c = CATS[it.cat];
+    const sel = selected.has(it.id);
+    return `<article class="card ${sel?"sel":""}" data-item="${it.id}" style="animation-delay:${i*.03}s">
+      <div class="chk"></div>
+      <div class="top">
+        <span class="cat-tag" style="background:${c.color}">${c.label}</span>
+        <span class="price" style="font-size:14px">${euro(it.price)}</span>
+      </div>
+      <h3>${it.name}</h3>
+      <p class="blurb">${it.blurb}</p>
+      <div class="shop"><span class="dot" style="background:${c.color}"></span>${s.name.split("—")[0].trim()}<span class="dist"> · ${s.district}</span></div>
+      <div class="price-row">
+        <span class="price">${euro(it.price)}</span>
+        <button class="toggle">${sel?"✓ Im Korb":"+ Hinzufügen"}</button>
+      </div>
+    </article>`;
+  }).join("");
+  document.querySelectorAll("[data-item]").forEach(el=>{
+    el.addEventListener("click",()=>toggleItem(el.dataset.item));
+  });
+}
+
+/* ============ TOGGLE / PRESET ============ */
+function toggleItem(id){
+  if(selected.has(id)) selected.delete(id); else selected.add(id);
+  // if selection diverges from active preset, mark as custom
+  if(activePreset){
+    const p = PRESETS.find(p=>p.id===activePreset);
+    const same = p.items.length===selected.size && p.items.every(x=>selected.has(x));
+    if(!same) activePreset = null;
+  }
+  syncAll(true);
+}
+function loadPreset(pid){
+  const p = PRESETS.find(p=>p.id===pid);
+  selected.clear();
+  p.items.forEach(id=>selected.add(id));
+  activePreset = pid;
+  syncAll(true);
+  document.querySelector(".main").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ============ DYNAMIC "why" for custom builds ============ */
+function customWhy(){
+  const n = selected.size;
+  if(n===0) return "Tippe ein Stück an oder lade oben einen Vorschlag, um deinen Korb zu füllen.";
+  const items = [...selected].map(id=>ITEMS.find(i=>i.id===id));
+  const cats = new Set(items.map(i=>i.cat));
+  const districts = new Set(items.map(i=>SHOPS[i.shop].district));
+  const hasLux = items.some(i=>i.cat==="luxus");
+  let s = `Eine eigene Komposition aus ${n} ${n===1?"Stück":"Stücken"} über ${cats.size} ${cats.size===1?"Genre":"Genres"} hinweg`;
+  if(districts.size>1) s += `, eingesammelt in ${districts.size} Bezirken`;
+  s += ". ";
+  if(hasLux) s += "Mit einem echten Luxus-Anker — schon ein Hingucker unter dem Geschenktisch.";
+  else if(cats.size>=4) s += "Schön breit gestreut: für jeden Gaumen am Frühstücks- wie am Aperitif-Tisch etwas.";
+  else s += "Fokussiert und stimmig — ein Korb mit klarer Handschrift.";
+  return s;
+}
+
+/* ============ SYNC EVERYTHING ============ */
+let lastTotal = 0;
+function syncAll(flash){
+  renderCatalog();
+  renderPresets_active();
+  const items = [...selected].map(id=>ITEMS.find(i=>i.id===id));
+  const total = items.reduce((s,i)=>s+i.price,0);
+
+  // receipt lines
+  const lines = document.getElementById("rLines");
+  if(items.length===0){
+    lines.innerHTML = `<div class="r-empty">— Keine Position —</div>`;
+  } else {
+    lines.innerHTML = items.map(i=>{
+      const s = SHOPS[i.shop];
+      return `<div class="r-line">
+        <span class="rl-name"><b>${i.name}</b><span class="rl-shop">${s.name.split("—")[0].trim()} · ${s.district}</span></span>
+        <span style="display:flex;gap:8px;align-items:baseline">
+          <span class="rl-price">${euro(i.price)}</span>
+          <span class="rl-x" data-x="${i.id}" title="Entfernen">✕</span>
+        </span>
+      </div>`;
+    }).join("");
+    lines.querySelectorAll("[data-x]").forEach(el=>{
+      el.addEventListener("click",(e)=>{e.stopPropagation();toggleItem(el.dataset.x);});
+    });
+  }
+
+  // totals
+  document.getElementById("itemCountLbl").textContent = `${items.length} ${items.length===1?"Position":"Positionen"}`;
+  document.getElementById("subAmt").textContent = euro(total);
+  const grand = document.getElementById("grandAmt");
+  grand.innerHTML = euro(total);
+  if(flash && total!==lastTotal){ grand.classList.remove("flash"); void grand.offsetWidth; grand.classList.add("flash"); }
+  lastTotal = total;
+
+  // title + why
+  const ttl = document.getElementById("basketTitle");
+  const sub = document.getElementById("basketSub");
+  const why = document.getElementById("whyTxt");
+  if(activePreset){
+    const p = PRESETS.find(p=>p.id===activePreset);
+    ttl.textContent = p.name;
+    sub.textContent = "Vorschlag · frei veränderbar";
+    why.textContent = p.why;
+  } else if(items.length>0){
+    ttl.textContent = "Eigene Komposition";
+    sub.textContent = "frei zusammengestellt";
+    why.textContent = customWhy();
+  } else {
+    ttl.textContent = "Dein Korb";
+    sub.textContent = "noch leer";
+    why.textContent = customWhy();
+  }
+
+  // route note
+  const shops = new Set(items.map(i=>i.shop));
+  const districts = new Set(items.map(i=>SHOPS[i.shop].district));
+  const route = document.getElementById("routeNote");
+  if(items.length===0){
+    route.innerHTML = "Noch keine Läden ausgewählt.";
+  } else {
+    const perPerson = (total/2);
+    route.innerHTML = `Einkaufsroute: <b>${shops.size} ${shops.size===1?"Laden":"Läden"}</b> in <b>${districts.size} ${districts.size===1?"Bezirk":"Bezirken"}</b> (${[...districts].join(", ")}).
+      <div class="split">Pro Person (geteilt durch 2): ${euro(Math.round(perPerson))}</div>`;
+  }
+
+  updateMap();
+}
+
+function renderPresets_active(){
+  document.querySelectorAll("[data-preset]").forEach(el=>{
+    el.classList.toggle("active", el.dataset.preset===activePreset);
+  });
+}
+
+/* ============ MAP ============ */
+let map, markers={};
+function initMap(){
+  map = L.map("map",{scrollWheelZoom:false,zoomControl:true}).setView([52.512,13.39],12);
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{
+    attribution:'&copy; OpenStreetMap &copy; CARTO', maxZoom:19, subdomains:"abcd"
+  }).addTo(map);
+  Object.entries(SHOPS).forEach(([sid,s])=>{
+    const m = L.circleMarker([s.lat,s.lng],{
+      radius:8, color:"#211d17", weight:1.5, fillColor:"#ece0c6", fillOpacity:1
+    }).addTo(map);
+    m.on("click",()=>m.setPopupContent(popupHTML(sid)));
+    m.bindPopup(popupHTML(sid));
+    markers[sid]=m;
+  });
+}
+function popupHTML(sid){
+  const s = SHOPS[sid];
+  const chosen = [...selected].map(id=>ITEMS.find(i=>i.id===id)).filter(i=>i.shop===sid);
+  const list = chosen.length
+    ? `<ul>${chosen.map(i=>`<li>${i.name} — <b>${euro(i.price)}</b></li>`).join("")}</ul>`
+    : `<div class="none">Stücke dieses Ladens noch nicht im Korb.</div>`;
+  return `<div class="pop"><h4>${s.name}</h4><div class="pa">${s.addr} Berlin · ${s.district}</div>${list}</div>`;
+}
+function updateMap(){
+  if(!map) return;
+  const activeShops = new Set([...selected].map(id=>ITEMS.find(i=>i.id===id).shop));
+  Object.entries(markers).forEach(([sid,m])=>{
+    const on = activeShops.has(sid);
+    m.setStyle({
+      fillColor: on ? "#7c2330" : "#ece0c6",
+      radius: on ? 11 : 8,
+      weight: on ? 2 : 1.5,
+      color: on ? "#5d171f" : "#211d17",
+    });
+    if(on) m.bringToFront();
+    m.setPopupContent(popupHTML(sid));
+  });
+}
+
+/* ============ ACTIONS ============ */
+document.getElementById("clearBtn").addEventListener("click",()=>{
+  selected.clear(); activePreset=null; syncAll(true);
+});
+document.getElementById("copyBtn").addEventListener("click",()=>{
+  const items=[...selected].map(id=>ITEMS.find(i=>i.id===id));
+  if(!items.length){ flashBtn("copyBtn","Korb ist leer"); return; }
+  const total=items.reduce((s,i)=>s+i.price,0);
+  let txt=`BERLINER FRESSKORB${activePreset?" — "+PRESETS.find(p=>p.id===activePreset).name:""}\n`;
+  txt+="—".repeat(34)+"\n";
+  items.forEach(i=>{ txt+=`• ${i.name}\n   ${euro(i.price)} · ${SHOPS[i.shop].name.split("—")[0].trim()}, ${SHOPS[i.shop].district}\n`; });
+  txt+="—".repeat(34)+"\n";
+  txt+=`Summe: ${euro(total)}  (pro Person ${euro(Math.round(total/2))})\n`;
+  const shops=new Set(items.map(i=>i.shop)), d=new Set(items.map(i=>SHOPS[i.shop].district));
+  txt+=`Route: ${shops.size} Läden in ${d.size} Bezirken (${[...d].join(", ")})`;
+  navigator.clipboard.writeText(txt).then(()=>flashBtn("copyBtn","✓ Kopiert!"),()=>flashBtn("copyBtn","Fehler"));
+});
+function flashBtn(id,msg){
+  const b=document.getElementById(id), old=b.textContent;
+  b.textContent=msg; setTimeout(()=>b.textContent=old,1400);
+}
+
+/* ============ BOOT ============ */
+renderPresets();
+renderFilters();
+renderCatalog();
+initMap();
+syncAll(false);
+</script>
+</body>
+</html>
