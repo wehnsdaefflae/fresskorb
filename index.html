@@ -126,6 +126,9 @@
   }
   .chip:hover{border-color:var(--ink);color:var(--ink)}
   .chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .chip.haltbar-chip{border-color:var(--forest);color:var(--forest)}
+  .chip.haltbar-chip:hover{border-color:var(--forest);color:var(--forest);background:rgba(51,80,60,.08)}
+  .chip.haltbar-chip.on{background:var(--forest);color:var(--paper);border-color:var(--forest)}
 
   /* catalog grid */
   .catalog{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
@@ -147,6 +150,10 @@
     display:flex;align-items:center;gap:6px;margin-top:auto}
   .card .shop .dot{width:7px;height:7px;border-radius:50%;flex:none}
   .card .dist{color:var(--ink-soft)}
+  .card .keeps,.card .fresh{font-family:var(--mono);font-size:9px;letter-spacing:.04em;
+    padding:2px 6px;border-radius:20px;margin-left:auto;white-space:nowrap}
+  .card .keeps{color:var(--forest);border:1px solid var(--forest);background:rgba(51,80,60,.07)}
+  .card .fresh{color:var(--oxblood);border:1px solid var(--oxblood);background:rgba(124,35,48,.06)}
   .card .price-row{display:flex;justify-content:space-between;align-items:center;margin-top:11px;
     border-top:1px dashed var(--line-dk);padding-top:9px}
   .card .price{font-family:var(--mono);font-weight:700;font-size:16px;color:var(--oxblood)}
@@ -260,7 +267,7 @@
     <div class="rule-fancy reveal" style="animation-delay:.16s">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9h18l-1.4 9.2a2 2 0 0 1-2 1.8H6.4a2 2 0 0 1-2-1.8L3 9Z"/><path d="M7 9 9.5 4M17 9 14.5 4"/><path d="M9 13v3M12 13v3M15 13v3"/></svg>
     </div>
-    <p class="standfirst reveal" style="animation-delay:.2s">Wähle aus <b>21 besonderen Stücken</b> von Kaviar bis Stadthonig. Lade einen der fünf <b>vorgeschlagenen Körbe</b> oder kombiniere frei — die Summe und die Einkaufsroute rechnen sich <b>live</b> mit.</p>
+    <p class="standfirst reveal" style="animation-delay:.2s">Wähle aus <b>34 besonderen Stücken</b> von Kaviar bis Stadthonig — viele davon <b>lange haltbar</b> und reisefest. Lade einen der sechs <b>vorgeschlagenen Körbe</b> oder kombiniere frei; die Summe und die Einkaufsroute rechnen sich <b>live</b> mit. Mit dem Filter <b>„Haltbar ∞“</b> zeigst du nur Unverderbliches.</p>
   </header>
 
   <!-- ======= PRESETS ======= -->
@@ -361,6 +368,12 @@ const SHOPS = {
   myconbini:{name:"MYCONBINI", addr:"Linienstr. 225a, 10119", district:"Mitte", lat:52.5290, lng:13.4030},
   pt:       {name:"Paper & Tea", addr:"Bleibtreustr. 4, 10623", district:"Charlottenburg", lat:52.5045, lng:13.3230},
   oel:      {name:"OEL Berlin", addr:"Urbanstr. 71, 10967", district:"Kreuzberg", lat:52.4905, lng:13.4220},
+  trueffel: {name:"Trüffel Company", addr:"Kurfürstendamm 159, 10709", district:"Charlottenburg", lat:52.4960, lng:13.3050},
+  sardinen: {name:"Sardinen.Bar", addr:"Grunewaldstr. 79, 10823", district:"Schöneberg", lat:52.4905, lng:13.3530},
+  senf:     {name:"SenfSalon", addr:"Hagelberger Str. 46, 10965", district:"Kreuzberg", lat:52.4915, lng:13.3825},
+  viani:    {name:"Viani Alimentari", addr:"Schönhauser Allee 46, 10437", district:"Prenzlauer Berg", lat:52.5415, lng:13.4135},
+  kochan:   {name:"Dr. Kochan Schnapskultur", addr:"Immanuelkirchstr. 4, 10405", district:"Prenzlauer Berg", lat:52.5350, lng:13.4205},
+  buchwald: {name:"Konditorei Buchwald", addr:"Bartningallee 29, 10557", district:"Hansaviertel", lat:52.5210, lng:13.3415},
 };
 
 // id, name, shop, cat, price, blurb
@@ -386,7 +399,26 @@ const ITEMS = [
   {id:"oel",      name:"Single-Estate Koroneiki Olivenöl, 0,5 l", shop:"oel", cat:"welt",   price:24, blurb:"Preisgekröntes Bio-Öl vom eigenen 300-Bäume-Hain bei Kalamata, voll rückverfolgbar."},
   {id:"robertis", name:"De Robertis Coratina Olivenöl, 250 ml", shop:"goldhahn", cat:"welt", price:12, blurb:"Sortenreines apulisches Öl aus dem Slow-Food-Deli — grasig, scharf, charaktervoll."},
   {id:"pepper",   name:"Wildpfeffer & seltene Salze",        shop:"goldhahn", cat:"pikant", price:14, blurb:"Esoterische Einzel-Ursprung-Gewürze aus dem Feinkost- & Kochbuchladen am Helmholtzplatz."},
+
+  /* — Haltbares / Vorratskammer: lange haltbar, reisefest — */
+  {id:"trufflehoney",name:"Trüffelhonig (Akazie & Sommertrüffel)", shop:"kadewe", cat:"luxus", price:22, blurb:"Vom Artisan-de-la-Truffe-Stand: Akazienhonig mit echtem Sommertrüffel — hält Monate, anders als frische Knollen."},
+  {id:"bottarga", name:"Bottarga di Muggine, 100 g",         shop:"kadewe",   cat:"luxus",  price:38, blurb:"Gepresster, getrockneter Meeräschen-Rogen — das „Trüffel des Meeres“, raspelfein über Pasta, monatelang haltbar."},
+  {id:"ferber",   name:"Christine Ferber Confiture (Elsass)", shop:"maitre",  cat:"suess",  price:14, blurb:"Marmelade der „Fee der Konfitüre“ — im Kupferkessel in Mini-Chargen gekocht, weltberühmt, ungeöffnet lange haltbar."},
+  {id:"trueffelsalz",name:"Trüffelsalz mit Périgord-Trüffel", shop:"trueffel", cat:"pikant", price:15, blurb:"Aus der Trüffel-Boutique am Ku’damm — ganzjährig verfügbares, haltbares Edel-Salz mit echtem Schwarztrüffel."},
+  {id:"trueffelsauce",name:"Weiße Trüffelsauce, 85 g",       shop:"trueffel", cat:"luxus",  price:8,  blurb:"Sommertrüffel-Sauce im Glas — ein Löffel adelt Risotto oder Rührei; reisefest und lange haltbar."},
+  {id:"conservas",name:"Konservas-Set: Oktopus & Herzmuscheln", shop:"sardinen", cat:"welt", price:12, blurb:"Aus Deutschlands erster Konserven-Bar — iberische Edel-Dosen, erst probieren, dann mitnehmen. Jahrelang haltbar."},
+  {id:"senf",     name:"Handgemachtes Senf-Trio (Feige · Bier · Himbeere)", shop:"senf", cat:"pikant", price:13, blurb:"Aus der Kreuzberger Senfmanufaktur (seit 2003) mit ~30 Sorten zum Probieren am Tresen — monatelang haltbar."},
+  {id:"pasta",    name:"Gragnano-IGP-Bronzepasta & apulischer Sugo", shop:"viani", cat:"welt", price:9, blurb:"Rauh gezogene Pasta aus dem italienischen Alimentari plus passendem Sugo im Glas — Vorratskammer-Klassiker."},
+  {id:"porcini",  name:"Getrocknete Steinpilze",             shop:"viani",    cat:"pikant", price:12, blurb:"Intensiv duftende, luftgetrocknete Porcini aus dem Alimentari — ein Päckchen würzt ein ganzes Jahr."},
+  {id:"amaro",    name:"Berliner Amaro „212“ (Freimeisterkollektiv)", shop:"kochan", cat:"spirit", price:33, blurb:"Berlin-gemachter Kräuterlikör aus dem Slow-Food-Spirituosenladen — hält quasi ewig, der digestive Abschluss."},
+  {id:"baumkuchen",name:"Schoko-Baumkuchen-Stange",          shop:"buchwald", cat:"suess",  price:22, blurb:"Geheimrezept von Berlins ältester Konditorei (seit 1852) — schokoglasiert, reisefest, hält Wochen."},
+  {id:"pralus",   name:"François Pralus Schokoladen-Turm",    shop:"goldhahn", cat:"suess",  price:36, blurb:"„Pyramide des Tropiques“ — zehn Single-Origin-Riegel Bean-to-Bar aus eigener Plantage; ein haltbarer Show-Stopper."},
+  {id:"oolong",   name:"Four-Seasons Taiwan-Oolong",          shop:"pt",       cat:"kaffee", price:29, blurb:"Hochland-Oolong vom Tee-Haus, in der Dose lange haltbar — der Edeltee, der mit Lagerung sogar gewinnt."},
 ];
+
+// Verderbliches, das ins Kühlfach gehört — alles andere gilt als „haltbar".
+const PERISHABLE = new Set(["caviar","salmon","eel","comte","cheese"]);
+const keepsOk = id => !PERISHABLE.has(id);
 
 const PRESETS = [
   {id:"klassiker", name:"Der Ur-Berliner", items:["salmon","eel","gin","honey","pralines"],
@@ -399,6 +431,8 @@ const PRESETS = [
    why:"Lauter Macher-Produkte mit gläserner Produktion: Bean-to-Bar-Schokolade aus eigenem Kakao, Tree-to-Cup-Kaffee, Ganztier-Wurst und Almkäse. Transparenz zum Anbeißen — und alles im Osten der Stadt beieinander."},
   {id:"kleinfein", name:"Klein, fein & feierlich", items:["honey","sardines","robertis","pralines","cheese"],
    why:"Ein bewusst schlanker Korb um die 80 € — und trotzdem kein einziges Stück von der Stange. Beweist, dass ein durchdachtes Geschenk nicht teuer sein muss, sondern besonders."},
+  {id:"vorrat", name:"Der Vorratskorb", items:["trufflehoney","conservas","pasta","ferber","amaro","baumkuchen"],
+   why:"Sechs Stücke, die alle Monate halten — kein Kühlfach, keine Eile. Der Korb, den man Wochen vorher einpacken kann und der eine Hochzeitsreise problemlos übersteht: Trüffelhonig, Edel-Konservas, Gragnano-Pasta, Ferber-Konfitüre, Berliner Amaro und Baumkuchen."},
 ];
 
 /* ============ STATE ============ */
@@ -424,10 +458,11 @@ function renderPresets(){
 /* ============ RENDER: filters ============ */
 let activeFilter = "alle";
 function renderFilters(){
-  const cats = ["alle", ...Object.keys(CATS)];
+  const cats = ["alle", "haltbar", ...Object.keys(CATS)];
   document.getElementById("filters").innerHTML = cats.map(c=>{
-    const lbl = c==="alle" ? "Alles" : CATS[c].label;
-    return `<button class="chip ${c===activeFilter?"on":""}" data-filter="${c}">${lbl}</button>`;
+    const lbl = c==="alle" ? "Alles" : c==="haltbar" ? "Haltbar ∞" : CATS[c].label;
+    const extra = c==="haltbar" ? " haltbar-chip" : "";
+    return `<button class="chip${extra} ${c===activeFilter?"on":""}" data-filter="${c}">${lbl}</button>`;
   }).join("");
   document.querySelectorAll("[data-filter]").forEach(el=>{
     el.addEventListener("click",()=>{activeFilter=el.dataset.filter;renderFilters();renderCatalog();});
@@ -436,10 +471,11 @@ function renderFilters(){
 
 /* ============ RENDER: catalog ============ */
 function renderCatalog(){
-  const list = ITEMS.filter(it=> activeFilter==="alle" || it.cat===activeFilter);
+  const list = ITEMS.filter(it=> activeFilter==="alle" ? true : activeFilter==="haltbar" ? keepsOk(it.id) : it.cat===activeFilter);
   document.getElementById("catalog").innerHTML = list.map((it,i)=>{
     const s = SHOPS[it.shop], c = CATS[it.cat];
     const sel = selected.has(it.id);
+    const keeps = keepsOk(it.id);
     return `<article class="card ${sel?"sel":""}" data-item="${it.id}" style="animation-delay:${i*.03}s">
       <div class="chk"></div>
       <div class="top">
@@ -448,7 +484,7 @@ function renderCatalog(){
       </div>
       <h3>${it.name}</h3>
       <p class="blurb">${it.blurb}</p>
-      <div class="shop"><span class="dot" style="background:${c.color}"></span>${s.name.split("—")[0].trim()}<span class="dist"> · ${s.district}</span></div>
+      <div class="shop"><span class="dot" style="background:${c.color}"></span>${s.name.split("—")[0].trim()}<span class="dist"> · ${s.district}</span>${keeps?'<span class="keeps" title="lange haltbar, reisefest">∞ haltbar</span>':'<span class="fresh" title="frisch — kühl lagern, bald genießen">❄ frisch</span>'}</span>
       <div class="price-row">
         <span class="price">${euro(it.price)}</span>
         <button class="toggle">${sel?"✓ Im Korb":"+ Hinzufügen"}</button>
