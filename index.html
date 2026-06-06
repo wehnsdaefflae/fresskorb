@@ -278,7 +278,7 @@
     <div class="rule-fancy reveal" style="animation-delay:.16s">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9h18l-1.4 9.2a2 2 0 0 1-2 1.8H6.4a2 2 0 0 1-2-1.8L3 9Z"/><path d="M7 9 9.5 4M17 9 14.5 4"/><path d="M9 13v3M12 13v3M15 13v3"/></svg>
     </div>
-    <p class="standfirst reveal" style="animation-delay:.2s">Wähle aus <b>69 besonderen Stücken</b> von Kaviar über Naturwein bis Stadthonig — viele davon <b>lange haltbar</b> und reisefest. Starte mit den drei Körben <b>„Für Cornelius &amp; Lisa“</b> (klein bis groß, bis 200 €), lade einen der elf <b>vorgeschlagenen Körbe</b> oder kombiniere frei; die Summe und die Einkaufsroute rechnen sich <b>live</b> mit. Mit dem Filter <b>„Haltbar ∞“</b> zeigst du nur Unverderbliches — und über <b>„Teilen“</b> verschickst du deinen Korb als Link.</p>
+    <p class="standfirst reveal" style="animation-delay:.2s">Wähle aus <b>70 besonderen Stücken</b> von Kaviar über Naturwein bis Stadthonig — viele davon <b>lange haltbar</b> und reisefest. Starte mit den drei Körben <b>„Für Cornelius &amp; Lisa“</b> (klein bis groß, bis 200 €), lade einen der elf <b>vorgeschlagenen Körbe</b> oder kombiniere frei; die Summe und die Einkaufsroute rechnen sich <b>live</b> mit. Mit dem Filter <b>„Haltbar ∞“</b> zeigst du nur Unverderbliches — und über <b>„Teilen“</b> verschickst du deinen Korb als Link.</p>
   </header>
 
   <!-- ======= SHARED-BASKET BANNER ======= -->
@@ -504,10 +504,11 @@ const ITEMS = [
 
   /* — Für Cornelius & Lisa: nach dem WhatsApp-Verlauf maßgeschneidert — */
   {id:"b_schlenkerla",name:"Aecht Schlenkerla Rauchbier-Märzen", shop:"mutedhorn", cat:"bier", price:4, blurb:"Bamberger Rauchbier wie an seinem Stammkeller („komm zum schlenk“) — rauchig, fränkisch, der perfekte Begleiter zum Schäuferla."},
-  {id:"b_keller", name:"Fränkisches Kellerbier, ungespundet",  shop:"mutedhorn",  cat:"bier", price:4, blurb:"Naturtrübes Lagerbier für den bekennenden Seidla-Fan — „bestes Seidlas-Wetter“, jetzt auch in Berlin zu bekommen."},
+  {id:"b_keller", name:"Belgisches Gueuze-Lambic (0,375 l)",   shop:"mutedhorn",  cat:"bier", price:8, blurb:"Spontan vergorenes Lambic — ein Bierstil, den man auf dem Holzfeuer nicht brauen kann. Die elegante Überraschung für jemanden, der sein Kellerbier (das „Görchla“) selbst macht."},
   {id:"b_radler",  name:"Handwerks-Radler (Bier & Zitrone)",   shop:"brlo",       cat:"bier", price:4, blurb:"Weil er sich „schon noch paar Radler auf der Veranda gegönnt hätte“ — die spritzige Hälfte des Keller-Nachmittags."},
   {id:"t_paprika", name:"Anatolische Paprikapaste, Pul Biber & Sumach", shop:"ozgida", cat:"pikant", price:9, blurb:"Genau die „babbrigga“, die bei ihm immer im Haus ist — plus Sumach & Pul Biber fürs Döner-Gefühl „mit allem“."},
   {id:"j_sushi",   name:"Sushi-Pantry: Premium-Sojasauce & Nori", shop:"myconbini", cat:"welt", price:16, blurb:"Für die nächste Heim-Sushi-Nacht zu zweit — „Sau gut, beste Idee gewesen.“ Echte Soja & geröstetes Nori."},
+  {id:"yuzuponzu", name:"Yuzu-Ponzu mit Koji (145 ml)",        shop:"myconbini", cat:"welt", price:12, blurb:"Zitrus-Soja mit Yuzu, Kombu & Shiitake aus dem kuratierten japanischen Feinkostladen — bringt jedes Gericht zum Leuchten, lange haltbar."},
   {id:"m_florina", name:"Florina-Paprika & Kalamata-Oliven (Glas)", shop:"oel",     cat:"welt", price:9, blurb:"Mediterran wie sein liebstes Salat-Mitbringsel (Feta, Süßkartoffel, Avocado) — süß-rauchige Spitzpaprika & Oliven."},
   {id:"p_bratwurst",name:"Grobe Bratwurst vom Ganztier-Metzger", shop:"markthalle", cat:"pikant", price:9, blurb:"Für den Grill am Fluss — „kannst du noch 6 Salzbrezen für die Würste kaufen?“ lässt grüßen. Am Tag kaufen."},
   {id:"h_hanf",    name:"Kulinarisches Hanf-Trio (Samen · Öl · Schoko)", shop:"hanfmuseum", cat:"berlin", price:14, blurb:"Lebensmittel-Hanf aus dem Berliner Hanf Museum — der augenzwinkernde, völlig legale Gruß an „Cpt. Spliffhook“."},
@@ -521,27 +522,27 @@ const keepsOk = id => !PERISHABLE.has(id);
 
 const PRESETS = [
   {id:"personal_s", name:"Für Cornelius & Lisa · klein", items:["b_schlenkerla","b_keller","t_paprika","j_sushi","p_bratwurst","barn","h_hanf"],
-   why:"Tier 1, ~72 €. Das kompakte, sehr persönliche Körbchen: fränkisches Keller- & Schlenkerla-Rauchbier für den Seidla-Fan, anatolische Paprikapaste & Sumach fürs Döner-Gefühl „mit allem“, ein Sushi-Pantry für die nächste „beste Idee“, grobe Bratwurst für den Grill am Fluss, guter Kaffee fürs Brunch — und ein augenzwinkerndes Hanf-Trio für „Cpt. Spliffhook“."},
+   why:"Tier 1, ~76 €. Das kompakte, sehr persönliche Körbchen: Schlenkerla-Rauchbier (sein erklärter Liebling) und ein belgisches Lambic — Bier-Überraschungen für den Brauereiwirt, der sein Kellerbier selbst macht — dazu anatolische Paprikapaste & Sumach fürs Döner-Gefühl „mit allem“, ein Sushi-Pantry für die nächste „beste Idee“, grobe Bratwurst für den Grill am Fluss, guter Kaffee fürs Brunch und ein augenzwinkerndes Hanf-Trio für „Cpt. Spliffhook“."},
   {id:"personal_m", name:"Für Cornelius & Lisa · mittel", items:["b_schlenkerla","b_keller","t_paprika","j_sushi","p_bratwurst","barn","h_hanf","b_brlo","s_sake","senf"],
-   why:"Tier 2, ~137 €. Alles aus „klein“, dazu ein BRLO-Bierpaket für den langen Keller-Abend, ein Junmai-Ginjo-Sake zur Heim-Sushi-Nacht und ein handgemachtes Senf-Trio für die Bratwurst. Mehr zum gemeinsamen Teilen — auch für Gastgeberin Lisa."},
+   why:"Tier 2, ~141 €. Alles aus „klein“, dazu ein BRLO-Bierpaket für den langen Abend, ein Junmai-Ginjo-Sake zur Heim-Sushi-Nacht und ein handgemachtes Senf-Trio für die Bratwurst. Mehr zum gemeinsamen Teilen — auch für Gastgeberin Lisa."},
   {id:"personal_l", name:"Für Cornelius & Lisa · groß", items:["b_schlenkerla","b_keller","t_paprika","j_sushi","p_bratwurst","barn","h_hanf","b_brlo","s_sake","senf","c_peppi","b_sour","oel","sw_goldhelm"],
-   why:"Tier 3, bis ~193 €. Die große Hochzeitsvariante: zusätzlich gereifter Alpen-Bergkäse, ein fassgereiftes Sauerbier als Rarität, ein Single-Estate-Olivenöl fürs mediterrane Kochen und eine feine Schokoladentafel als „Schokoladenbesen“-Gruß. Harter Schnaps und schwere Süßspeisen fehlen mit Absicht — beides mag er laut Verlauf nicht."},
+   why:"Tier 3, bis ~197 €. Die große Hochzeitsvariante: zusätzlich gereifter Alpen-Bergkäse, ein fassgereiftes Sauerbier als Rarität, ein Single-Estate-Olivenöl fürs mediterrane Kochen und eine feine Schokoladentafel als „Schokoladenbesen“-Gruß. Harter Schnaps und schwere Süßspeisen fehlen mit Absicht — mag er laut Verlauf nicht (und seinen Brand brennt der Brauereiwirt ohnehin selbst)."},
+  {id:"p_beer", name:"Bier für die Brauer", items:["b_keller","b_sour","b_brlo","b_radler","b_schlenkerla","h_hanf"],
+   why:"Cornelius & Lisa brauen in Memmelsdorf ihr eigenes Kellerbier — also bringen wir alles, was *kein* Kellerbier ist: ein belgisches Lambic, ein fassgereiftes Sauerbier, BRLO-Craft, ein Radler und (sein erklärter Liebling) Schlenkerla-Rauch. Dazu Hanf-Knabberei für „Cpt. Spliffhook“."},
+  {id:"p_sushi", name:"Heim-Sushi-Abend", items:["j_sushi","s_sake","yuzuponzu","matcha","gyokuro"],
+   why:"Ihre „beste Idee“ als Heim-Abend zu zweit: Premium-Soja & Nori, ein Junmai-Ginjo-Sake, Yuzu-Ponzu, Zeremonien-Matcha und Edel-Gyokuro. Japan, das es in Memmelsdorf nicht an jeder Ecke gibt."},
+  {id:"p_doener", name:"Döner & Mezze daheim", items:["t_paprika","m_florina","oel","sw_damaskus","spice"],
+   why:"Für den bekennenden Döner-Fan „mit allem“: anatolische Paprikapaste, Sumach & Pul Biber, Florina-Spitzpaprika, gutes Olivenöl, frisches Baklava und ein Bio-Gewürzset — ein Mezze-Tisch, den Gastgeberin Lisa liebevoll anrichtet."},
+  {id:"p_welt", name:"Welt-Speisekammer", items:["c_gochujang","c_fishsauce","c_mezcal","c_mole","pasta"],
+   why:"Was die fränkische Wirtsküche zu Hause nicht hergibt: koreanisches Gochujang, vietnamesische Phú-Quốc-Fischsauce, ein rauchiger Mezcal, mexikanische Mole und Gragnano-Bronzepasta. Berlin bringt die Welt in die Küche."},
+  {id:"p_brunch", name:"Sonntags-Brunch zu zweit", items:["barn","honey","ferber","br_domberger","sw_dubonheur"],
+   why:"Ein freier Morgen abseits des eigenen Gasthofs: Specialty-Filterkaffee, Berliner Stadthonig, Christine-Ferber-Konfitüre, ein Domberger-Sauerteiglaib und feine Macarons. Das Frühstück, das sie sonst für ihre Gäste machen — diesmal für sich."},
   {id:"klassiker", name:"Der Ur-Berliner", items:["salmon","eel","gin","honey","pralines"],
    why:"Fünf Häuser, die es nur hier gibt: Rogackis Räucherkammer von 1928, Sawades Pralinen seit 1880, Gin mit Berliner Botanicals und Honig aus Stadtbienen. Ein Korb, den man buchstäblich nirgends sonst auf der Welt packen kann."},
   {id:"luxus", name:"Das Luxus-Körbchen", items:["caviar","balsamico","sardines","comte","gyokuro"],
    why:"Die Spitze des Sortiments: frischer Stör-Kaviar, 25 Jahre gereifter Balsamico, Jahrgangs-Sardinen, Affineur-Comté und ein schattengewachsener Gyokuro. Lauter Dinge, die man vor dem Kauf an der Theke probiert."},
-  {id:"weltreise", name:"Die Genuss-Weltreise", items:["matcha","panettone","oel","sardines","spice"],
-   why:"Japan, Italien, Griechenland, die Bretagne — eine kulinarische Erdumrundung, in einer einzigen Stadt eingesammelt. Für ein Paar, das gern reist und am Tisch die Welt schmeckt."},
-  {id:"handwerk", name:"Der Handwerks-Korb", items:["barn","belyzium","salami","cheese","pepper"],
-   why:"Lauter Macher-Produkte mit gläserner Produktion: Bean-to-Bar-Schokolade aus eigenem Kakao, Tree-to-Cup-Kaffee, Ganztier-Wurst und Almkäse. Transparenz zum Anbeißen — und alles im Osten der Stadt beieinander."},
-  {id:"kleinfein", name:"Klein, fein & feierlich", items:["honey","sardines","robertis","pralines","cheese"],
-   why:"Ein bewusst schlanker Korb um die 80 € — und trotzdem kein einziges Stück von der Stange. Beweist, dass ein durchdachtes Geschenk nicht teuer sein muss, sondern besonders."},
   {id:"vorrat", name:"Der Vorratskorb", items:["trufflehoney","conservas","pasta","ferber","amaro","baumkuchen"],
    why:"Sechs Stücke, die alle Monate halten — kein Kühlfach, keine Eile. Der Korb, den man Wochen vorher einpacken kann und der eine Hochzeitsreise problemlos übersteht: Trüffelhonig, Edel-Konservas, Gragnano-Pasta, Ferber-Konfitüre, Berliner Amaro und Baumkuchen."},
-  {id:"apero", name:"Das Apéro-Brett", items:["w_natural","c_jamon","c_peppi","br_domberger","oel","sw_marzipan"],
-   why:"Alles für den ersten gemeinsamen Abend als Eheleute: eine Flasche Naturwein, Eichel-Iberico, gereifter Alpenkäse, ein knuspriger Sauerteiglaib und gutes Olivenöl. Ein komplettes Brett — frische Teile am Tag des Schenkens kaufen."},
-  {id:"hausbar", name:"Die Berliner Hausbar", items:["gin","s_rye","amaro","w_riesling","b_brlo","s_sake"],
-   why:"Eine gut sortierte Bar zum Selbstmischen: Berliner Gin, regionaler Rye-Whisky, Kräuter-Amaro, ein Spitzen-Riesling, Craft-Bier und Sake. Lauter Flaschen aus echten Berliner Läden — und alle lange haltbar."},
 ];
 
 /* ============ STATE ============ */
