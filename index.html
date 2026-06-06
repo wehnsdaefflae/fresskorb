@@ -278,7 +278,7 @@
     <div class="rule-fancy reveal" style="animation-delay:.16s">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9h18l-1.4 9.2a2 2 0 0 1-2 1.8H6.4a2 2 0 0 1-2-1.8L3 9Z"/><path d="M7 9 9.5 4M17 9 14.5 4"/><path d="M9 13v3M12 13v3M15 13v3"/></svg>
     </div>
-    <p class="standfirst reveal" style="animation-delay:.2s">Wähle aus <b>61 besonderen Stücken</b> von Kaviar über Naturwein bis Stadthonig — viele davon <b>lange haltbar</b> und reisefest. Lade einen der acht <b>vorgeschlagenen Körbe</b> oder kombiniere frei; die Summe und die Einkaufsroute rechnen sich <b>live</b> mit. Mit dem Filter <b>„Haltbar ∞“</b> zeigst du nur Unverderbliches — und über <b>„Teilen“</b> verschickst du deinen Korb als Link.</p>
+    <p class="standfirst reveal" style="animation-delay:.2s">Wähle aus <b>69 besonderen Stücken</b> von Kaviar über Naturwein bis Stadthonig — viele davon <b>lange haltbar</b> und reisefest. Starte mit dem Korb <b>„Für Cornelius &amp; Lisa“</b>, lade einen der neun <b>vorgeschlagenen Körbe</b> oder kombiniere frei; die Summe und die Einkaufsroute rechnen sich <b>live</b> mit. Mit dem Filter <b>„Haltbar ∞“</b> zeigst du nur Unverderbliches — und über <b>„Teilen“</b> verschickst du deinen Korb als Link.</p>
   </header>
 
   <!-- ======= SHARED-BASKET BANNER ======= -->
@@ -291,7 +291,7 @@
   <!-- ======= PRESETS ======= -->
   <div class="sec-head">
     <span class="kicker">Vorschläge</span>
-    <h2>Acht kuratierte Körbe</h2>
+    <h2>Neun kuratierte Körbe</h2>
     <span class="fill"></span>
   </div>
   <div class="presets" id="presets"></div>
@@ -420,6 +420,8 @@ const SHOPS = {
   chilipaprika:{name:"Chili & Paprika", addr:"Danziger Str. 118, 10405", district:"Prenzlauer Berg", lat:52.5400, lng:13.4250},
   asialee:  {name:"Asia Market Lee", addr:"Dircksenstr. 101–103, 10178", district:"Mitte", lat:52.5210, lng:13.4150},
   dongxuan: {name:"Dong Xuan Center", addr:"Herzbergstr. 128–139, 10365", district:"Lichtenberg", lat:52.5230, lng:13.4980},
+  ozgida:   {name:"Öz-Gida", addr:"Goltzstr. 32, 10781", district:"Schöneberg", lat:52.4925, lng:13.3505},
+  hanfmuseum:{name:"Hanf Museum — Shop", addr:"Mühlendamm 5, 10178", district:"Mitte", lat:52.5152, lng:13.4078},
 };
 
 // id, name, shop, cat, price, blurb
@@ -499,15 +501,27 @@ const ITEMS = [
   {id:"c_mole",    name:"Mole-Paste Poblano im Glas",         shop:"chilipaprika",cat:"welt", price:10, blurb:"Komplexe mexikanische Schokoladen-Chili-Sauce zum Einrühren — ein Glas verwandelt jedes Hähnchen."},
   {id:"c_gochujang",name:"Gereiftes Gochujang im Tontopf",    shop:"asialee",    cat:"welt", price:10, blurb:"Fermentierte Chili-Paste aus dem größten Korea-Laden der Mitte (~5.000 Produkte) — umami pur, lange haltbar."},
   {id:"c_fishsauce",name:"Phú-Quốc-Fischsauce (g.U., Erstpressung)", shop:"dongxuan", cat:"welt", price:9, blurb:"EU-geschützte Erstpress-Fischsauce aus dem vietnamesischen Basar in Lichtenberg — die gute, nicht die aus dem Supermarkt."},
+
+  /* — Für Cornelius & Lisa: nach dem WhatsApp-Verlauf maßgeschneidert — */
+  {id:"b_schlenkerla",name:"Aecht Schlenkerla Rauchbier-Märzen", shop:"mutedhorn", cat:"bier", price:4, blurb:"Bamberger Rauchbier wie an seinem Stammkeller („komm zum schlenk“) — rauchig, fränkisch, der perfekte Begleiter zum Schäuferla."},
+  {id:"b_keller", name:"Fränkisches Kellerbier, ungespundet",  shop:"mutedhorn",  cat:"bier", price:4, blurb:"Naturtrübes Lagerbier für den bekennenden Seidla-Fan — „bestes Seidlas-Wetter“, jetzt auch in Berlin zu bekommen."},
+  {id:"b_radler",  name:"Handwerks-Radler (Bier & Zitrone)",   shop:"brlo",       cat:"bier", price:4, blurb:"Weil er sich „schon noch paar Radler auf der Veranda gegönnt hätte“ — die spritzige Hälfte des Keller-Nachmittags."},
+  {id:"t_paprika", name:"Anatolische Paprikapaste, Pul Biber & Sumach", shop:"ozgida", cat:"pikant", price:9, blurb:"Genau die „babbrigga“, die bei ihm immer im Haus ist — plus Sumach & Pul Biber fürs Döner-Gefühl „mit allem“."},
+  {id:"j_sushi",   name:"Sushi-Pantry: Premium-Sojasauce & Nori", shop:"myconbini", cat:"welt", price:16, blurb:"Für die nächste Heim-Sushi-Nacht zu zweit — „Sau gut, beste Idee gewesen.“ Echte Soja & geröstetes Nori."},
+  {id:"m_florina", name:"Florina-Paprika & Kalamata-Oliven (Glas)", shop:"oel",     cat:"welt", price:9, blurb:"Mediterran wie sein liebstes Salat-Mitbringsel (Feta, Süßkartoffel, Avocado) — süß-rauchige Spitzpaprika & Oliven."},
+  {id:"p_bratwurst",name:"Grobe Bratwurst vom Ganztier-Metzger", shop:"markthalle", cat:"pikant", price:9, blurb:"Für den Grill am Fluss — „kannst du noch 6 Salzbrezen für die Würste kaufen?“ lässt grüßen. Am Tag kaufen."},
+  {id:"h_hanf",    name:"Kulinarisches Hanf-Trio (Samen · Öl · Schoko)", shop:"hanfmuseum", cat:"berlin", price:14, blurb:"Lebensmittel-Hanf aus dem Berliner Hanf Museum — der augenzwinkernde, völlig legale Gruß an „Cpt. Spliffhook“."},
 ];
 
 // Verderbliches, das ins Kühlfach gehört oder schnell gegessen wird — alles andere gilt als „haltbar".
 const PERISHABLE = new Set(["caviar","salmon","eel","comte","cheese","pralines",
   "b_pils","br_domberger","br_sofi","br_zeit","sw_dubonheur","sw_damaskus",
-  "c_peppi","c_nduja","c_parmigiano","c_jamon"]);
+  "c_peppi","c_nduja","c_parmigiano","c_jamon","p_bratwurst"]);
 const keepsOk = id => !PERISHABLE.has(id);
 
 const PRESETS = [
+  {id:"personal", name:"Für Cornelius & Lisa", items:["b_schlenkerla","b_keller","t_paprika","j_sushi","p_bratwurst","barn","h_hanf"],
+   why:"Nur für die beiden gepackt: fränkisches Keller- & Schlenkerla-Rauchbier für den Seidla-Fan, anatolische Paprikapaste & Sumach fürs Döner-Gefühl „mit allem“, ein Sushi-Pantry für die nächste „beste Idee“, grobe Bratwurst für den Grill am Fluss, guter Kaffee für die Brunch-Rituale — und ein augenzwinkerndes Hanf-Trio für „Cpt. Spliffhook“. (Harter Schnaps fehlt mit Absicht.)"},
   {id:"klassiker", name:"Der Ur-Berliner", items:["salmon","eel","gin","honey","pralines"],
    why:"Fünf Häuser, die es nur hier gibt: Rogackis Räucherkammer von 1928, Sawades Pralinen seit 1880, Gin mit Berliner Botanicals und Honig aus Stadtbienen. Ein Korb, den man buchstäblich nirgends sonst auf der Welt packen kann."},
   {id:"luxus", name:"Das Luxus-Körbchen", items:["caviar","balsamico","sardines","comte","gyokuro"],
