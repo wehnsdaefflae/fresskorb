@@ -207,9 +207,10 @@
     padding:11px 16px;border-top:1px dashed var(--line-dk);line-height:1.45}
   .route-note b{color:var(--ink)}
   .split{font-family:var(--mono);font-size:11px;color:var(--forest);margin-top:5px}
-  .r-actions{display:flex;gap:8px;padding:0 16px 15px}
-  .btn{flex:1;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
-    padding:9px;border-radius:2px;cursor:pointer;transition:all .15s;border:1.5px solid var(--ink)}
+  .r-actions{display:flex;flex-wrap:wrap;gap:8px;padding:0 16px 15px}
+  .btn{flex:1 1 44%;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    padding:9px 6px;border-radius:2px;cursor:pointer;transition:all .15s;border:1.5px solid var(--ink)}
+  .btn#shareBtn{flex:1 1 100%}
   .btn.ghost{background:transparent;color:var(--ink)}
   .btn.ghost:hover{background:var(--ink);color:var(--paper)}
   .btn.fill{background:var(--oxblood);border-color:var(--oxblood);color:var(--paper)}
@@ -247,6 +248,16 @@
     .basket-col{position:static}
     .main{margin-bottom:78px}
   }
+  /* shared-basket banner */
+  .shared-banner{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    margin:0 0 6px;padding:12px 18px;border:1.5px solid var(--forest);border-left:6px solid var(--forest);
+    background:rgba(51,80,60,.08);border-radius:2px;animation:rise .5s ease forwards}
+  .shared-banner .sb-mark{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--forest);font-weight:700}
+  .shared-banner .sb-txt{font-family:var(--display);font-style:italic;font-size:15px;color:var(--ink);flex:1}
+  .shared-banner .sb-x{margin-left:auto;border:none;background:transparent;color:var(--forest);
+    font-size:15px;cursor:pointer;font-family:var(--mono)}
+  .shared-banner .sb-x:hover{color:var(--ink)}
+
   /* staggered load */
   .reveal{opacity:0;transform:translateY(14px);animation:rise .7s cubic-bezier(.2,.8,.2,1) forwards}
   @keyframes rise{to{opacity:1;transform:none}}
@@ -267,13 +278,20 @@
     <div class="rule-fancy reveal" style="animation-delay:.16s">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9h18l-1.4 9.2a2 2 0 0 1-2 1.8H6.4a2 2 0 0 1-2-1.8L3 9Z"/><path d="M7 9 9.5 4M17 9 14.5 4"/><path d="M9 13v3M12 13v3M15 13v3"/></svg>
     </div>
-    <p class="standfirst reveal" style="animation-delay:.2s">Wähle aus <b>34 besonderen Stücken</b> von Kaviar bis Stadthonig — viele davon <b>lange haltbar</b> und reisefest. Lade einen der sechs <b>vorgeschlagenen Körbe</b> oder kombiniere frei; die Summe und die Einkaufsroute rechnen sich <b>live</b> mit. Mit dem Filter <b>„Haltbar ∞“</b> zeigst du nur Unverderbliches.</p>
+    <p class="standfirst reveal" style="animation-delay:.2s">Wähle aus <b>61 besonderen Stücken</b> von Kaviar über Naturwein bis Stadthonig — viele davon <b>lange haltbar</b> und reisefest. Lade einen der acht <b>vorgeschlagenen Körbe</b> oder kombiniere frei; die Summe und die Einkaufsroute rechnen sich <b>live</b> mit. Mit dem Filter <b>„Haltbar ∞“</b> zeigst du nur Unverderbliches — und über <b>„Teilen“</b> verschickst du deinen Korb als Link.</p>
   </header>
+
+  <!-- ======= SHARED-BASKET BANNER ======= -->
+  <div id="sharedBanner" class="shared-banner" hidden>
+    <span class="sb-mark">★ Geteilter Korb geladen</span>
+    <span class="sb-txt">Jemand hat dir diese Auswahl geschickt — du kannst frei weiter kombinieren.</span>
+    <button id="sbClose" class="sb-x" aria-label="schließen">✕</button>
+  </div>
 
   <!-- ======= PRESETS ======= -->
   <div class="sec-head">
     <span class="kicker">Vorschläge</span>
-    <h2>Sechs kuratierte Körbe</h2>
+    <h2>Acht kuratierte Körbe</h2>
     <span class="fill"></span>
   </div>
   <div class="presets" id="presets"></div>
@@ -311,7 +329,8 @@
         <div class="route-note" id="routeNote">Noch keine Läden ausgewählt.</div>
         <div class="r-actions">
           <button class="btn ghost" id="clearBtn">Leeren</button>
-          <button class="btn fill" id="copyBtn">Korb kopieren</button>
+          <button class="btn ghost" id="copyBtn">Liste kopieren</button>
+          <button class="btn fill" id="shareBtn">🔗 Teilen-Link</button>
         </div>
       </div>
     </div>
@@ -351,6 +370,9 @@ const CATS = {
   spirit:   {label:"Spirituosen",  color:"#3a4a6b"},
   pikant:   {label:"Pikant",       color:"#8a5a1e"},
   welt:     {label:"Welt",         color:"#5a3d6b"},
+  wein:     {label:"Wein",         color:"#6d2742"},
+  bier:     {label:"Bier",         color:"#9c6a1c"},
+  brot:     {label:"Brot & Co.",   color:"#8a6234"},
 };
 
 const SHOPS = {
@@ -374,6 +396,30 @@ const SHOPS = {
   viani:    {name:"Viani Alimentari", addr:"Schönhauser Allee 46, 10437", district:"Prenzlauer Berg", lat:52.5415, lng:13.4135},
   kochan:   {name:"Dr. Kochan Schnapskultur", addr:"Immanuelkirchstr. 4, 10405", district:"Prenzlauer Berg", lat:52.5350, lng:13.4205},
   buchwald: {name:"Konditorei Buchwald", addr:"Bartningallee 29, 10557", district:"Hansaviertel", lat:52.5210, lng:13.3415},
+  viniculture:{name:"Viniculture", addr:"Grolmanstr. 44–45, 10623", district:"Charlottenburg", lat:52.5060, lng:13.3210},
+  suff:     {name:"Weinhandlung Suff", addr:"Oranienstr. 200, 10999", district:"Kreuzberg", lat:52.5015, lng:13.4205},
+  planetwein:{name:"Planet Wein", addr:"Mohrenstr. 30, 10117", district:"Mitte", lat:52.5125, lng:13.3895},
+  mutedhorn:{name:"The Muted Horn", addr:"Flughafenstr. 49, 12053", district:"Neukölln", lat:52.4805, lng:13.4225},
+  hopsbarley:{name:"Hops & Barley", addr:"Wühlischstr. 22/23, 10245", district:"Friedrichshain", lat:52.5105, lng:13.4595},
+  brlo:     {name:"BRLO Brwhouse", addr:"Schöneberger Str. 16, 10963", district:"Kreuzberg", lat:52.4975, lng:13.3760},
+  storkclub:{name:"Stork Club — House of Rye", addr:"Am Flutgraben 2, 12435", district:"Treptow", lat:52.4965, lng:13.4495},
+  sakekontor:{name:"Sake Kontor", addr:"Markgrafendamm 34, 10245", district:"Friedrichshain", lat:52.5005, lng:13.4665},
+  vomfass:  {name:"Vom Fass", addr:"Rheinstr. 64, 12159", district:"Friedenau", lat:52.4715, lng:13.3415},
+  domberger:{name:"Domberger Brot-Werk", addr:"Essener Str. 11, 10555", district:"Moabit", lat:52.5260, lng:13.3340},
+  sofi:     {name:"Sofi Bakery", addr:"Sophienstr. 21, 10178", district:"Mitte", lat:52.5258, lng:13.4015},
+  zeitfuerbrot:{name:"Zeit für Brot", addr:"Alte Schönhauser Str. 4, 10119", district:"Mitte", lat:52.5270, lng:13.4090},
+  rausch:   {name:"Rausch Schokoladenhaus", addr:"Charlottenstr. 60, 10117", district:"Mitte", lat:52.5135, lng:13.3925},
+  goldhelm: {name:"Goldhelm Schokolade", addr:"Tauentzienstr. 11, 10789", district:"Charlottenburg", lat:52.5048, lng:13.3365},
+  dubonheur:{name:"Du Bonheur", addr:"Brunnenstr. 39, 10115", district:"Mitte", lat:52.5370, lng:13.3990},
+  damaskus: {name:"Damaskus Konditorei", addr:"Sonnenallee 93, 12045", district:"Neukölln", lat:52.4810, lng:13.4380},
+  waldmarzipan:{name:"Wald Königsberger Marzipan", addr:"Pestalozzistr. 54a, 10627", district:"Charlottenburg", lat:52.5075, lng:13.3030},
+  peppi:    {name:"Peppi Käse Lager", addr:"Weichselstr. 65, 12043", district:"Neukölln", lat:52.4790, lng:13.4310},
+  lamuri:   {name:"Salumeria Lamuri", addr:"Köpenicker Str. 183, 10997", district:"Kreuzberg", lat:52.5010, lng:13.4440},
+  dapino:   {name:"Salumeria da Pino", addr:"Windscheidstr. 20, 10627", district:"Charlottenburg", lat:52.5070, lng:13.3030},
+  palacios: {name:"Palacios & Palacios", addr:"Anklamer Str. 16, 10115", district:"Mitte", lat:52.5360, lng:13.3970},
+  chilipaprika:{name:"Chili & Paprika", addr:"Danziger Str. 118, 10405", district:"Prenzlauer Berg", lat:52.5400, lng:13.4250},
+  asialee:  {name:"Asia Market Lee", addr:"Dircksenstr. 101–103, 10178", district:"Mitte", lat:52.5210, lng:13.4150},
+  dongxuan: {name:"Dong Xuan Center", addr:"Herzbergstr. 128–139, 10365", district:"Lichtenberg", lat:52.5230, lng:13.4980},
 };
 
 // id, name, shop, cat, price, blurb
@@ -414,10 +460,51 @@ const ITEMS = [
   {id:"baumkuchen",name:"Schoko-Baumkuchen-Stange",          shop:"buchwald", cat:"suess",  price:22, blurb:"Geheimrezept von Berlins ältester Konditorei (seit 1852) — schokoglasiert, reisefest, hält Wochen."},
   {id:"pralus",   name:"François Pralus Schokoladen-Turm",    shop:"goldhahn", cat:"suess",  price:36, blurb:"„Pyramide des Tropiques“ — zehn Single-Origin-Riegel Bean-to-Bar aus eigener Plantage; ein haltbarer Show-Stopper."},
   {id:"oolong",   name:"Four-Seasons Taiwan-Oolong",          shop:"pt",       cat:"kaffee", price:29, blurb:"Hochland-Oolong vom Tee-Haus, in der Dose lange haltbar — der Edeltee, der mit Lagerung sogar gewinnt."},
+
+  /* — Wein — */
+  {id:"w_natural", name:"Naturwein-Riesling (kleiner Mosel-Winzer)", shop:"viniculture", cat:"wein", price:24, blurb:"Aus Berlins ältester Naturweinhandlung (seit 1984) — Low-Intervention vom kleinen Gut, vor Ort verkostbar."},
+  {id:"w_orange",  name:"Orange Wine (Skin-Contact)",          shop:"viniculture", cat:"wein", price:30, blurb:"Maischevergorener Weißwein aus Friaul oder Slowenien — die spannendste Flasche im Regal."},
+  {id:"w_petnat",  name:"Deutscher Pét-Nat",                   shop:"suff",       cat:"wein", price:22, blurb:"Wilder Naturschaumwein eines jungen Winzers — aus dem Kult-Naturweinladen in Kreuzberg, vegan & bio."},
+  {id:"w_riesling",name:"Großes-Gewächs-Riesling",            shop:"planetwein", cat:"wein", price:26, blurb:"Spitzen-Trockenriesling aus der Riesling-Boutique am Gendarmenmarkt von Sommelière Anja Schröder."},
+
+  /* — Bier — */
+  {id:"b_sour",    name:"Barrel-Aged Sour (0,375 l)",         shop:"mutedhorn",  cat:"bier", price:15, blurb:"Fassgereifte Wild-/Sauerbier-Rarität aus einem Laden mit 200+ Spezialflaschen — gibt’s sonst nirgends."},
+  {id:"b_brlo",    name:"BRLO Mixed-Pack (6 × 0,33 l)",       shop:"brlo",       cat:"bier", price:18, blurb:"Querschnitt von Berlins Container-Vorzeigebrauerei am Gleisdreieck — Helles, Pale Ale, German IPA."},
+  {id:"b_pils",    name:"Bügelflaschen-Hausbier (0,5 l)",     shop:"hopsbarley", cat:"bier", price:6,  blurb:"Unfiltriertes Pils, frisch vom Hahn ins Bügelglas gefüllt — winziges Friedrichshainer Brauhaus, bald trinken."},
+
+  /* — Spirituosen — */
+  {id:"s_rye",     name:"Stork Club Straight Rye Whisky (0,7 l)", shop:"storkclub", cat:"spirit", price:42, blurb:"Roggenwhisky aus der Stadt-Destillerie von Deutschlands führendem Rye-Brenner — „near-Berlin made“."},
+  {id:"s_sake",    name:"Junmai-Ginjo-Sake (720 ml)",        shop:"sakekontor", cat:"spirit", price:34, blurb:"Aus Berlins erstem Sake-Laden — offene Flaschen zum Probieren und echte Beratung, dazu Laden-Raritäten."},
+  {id:"s_fass",    name:"Fass-Whisky, selbst abgefüllt",      shop:"vomfass",    cat:"spirit", price:30, blurb:"Du füllst direkt aus dem Fass in die Flasche deiner Wahl — Single-Cask-Whisky, Rum oder Aceto, ganz nach Maß."},
+
+  /* — Brot & Backwaren (frisch, am Tag kaufen) — */
+  {id:"br_domberger",name:"„Beutebrot“-Sauerteiglaib",        shop:"domberger",  cat:"brot", price:6,  blurb:"Florian Dombergers Referenz-Sauerteig, 24 h+ geführt — Berlins meistzitiertes Handwerksbrot."},
+  {id:"br_sofi",   name:"„Berlin Loaf“ Sauerteig",            shop:"sofi",       cat:"brot", price:9,  blurb:"Slowness × Frederik Bille Brahe: Low-Intervention-Brot aus alten Getreidesorten kleiner Bio-Höfe."},
+  {id:"br_zeit",   name:"Gefüllte Zimtschnecken (3 Stk.)",    shop:"zeitfuerbrot",cat:"brot",price:9,  blurb:"Die berühmten Bio-Zimtschnecken, für die sich Schlangen bilden, wenn sie frisch aus dem Ofen kommen."},
+
+  /* — Süßes (Schokolade, Patisserie, Baklava, Marzipan) — */
+  {id:"sw_rausch", name:"Rausch Single-Origin Tafel-Set",     shop:"rausch",     cat:"suess", price:18, blurb:"Sortenreine Tafeln aus dem Schokoladenhaus am Gendarmenmarkt — Europas längste Trüffeltheke gibt’s gratis dazu."},
+  {id:"sw_goldhelm",name:"Goldhelm „Waldbär“-Schokoladentafel", shop:"goldhelm", cat:"suess", price:6, blurb:"Bean-to-Bar aus Erfurt mit eigenem Berlin-Laden — Zartbitter mit Heidelbeere, Cassis & Balsamico."},
+  {id:"sw_dubonheur",name:"Macarons, 6er-Schachtel",          shop:"dubonheur",  cat:"suess", price:13, blurb:"Von einer bei Pierre Hermé ausgebildeten Konditorin — feinste französische Patisserie in Mitte. Bald genießen."},
+  {id:"sw_damaskus",name:"Syrisches Baklava-Mix, 500 g",      shop:"damaskus",   cat:"suess", price:24, blurb:"Die Benchmark der Sonnenallee: frisch gemachtes Baklava der Familie Al-Sakka — hält ein paar Tage."},
+  {id:"sw_marzipan",name:"Königsberger Marzipan (flambiert)", shop:"waldmarzipan",cat:"suess",price:12, blurb:"Flambiertes ostpreußisches Marzipan nach 100-jährigem Rezept — Familienbetrieb seit den 1940ern, lange haltbar."},
+
+  /* — Käse, Charcuterie & Welt-Feinkost — */
+  {id:"c_peppi",   name:"Gereifter Alpen-Bergkäse am Stück",  shop:"peppi",      cat:"pikant", price:11, blurb:"Rohmilch-Spezialist für österreichische & Schweizer Almkäse — die alpine Ergänzung zum französischen Comté."},
+  {id:"c_nduja",   name:"’Nduja Calabrese (streichbar)",      shop:"lamuri",     cat:"pikant", price:8,  blurb:"Feurige streichbare Salami aus einer Salumeria in einer 1890er-Metzgerei — direkt von kalabrischen Kleinerzeugern."},
+  {id:"c_parmigiano",name:"Parmigiano Reggiano, 30 Monate (200 g)", shop:"dapino", cat:"pikant", price:9, blurb:"Lang gereifter Klassiker aus einer 40 Jahre alten Charlottenburger Salumeria — kristallin, würzig, am Stück."},
+  {id:"c_jamon",   name:"Jamón Ibérico de Bellota, 100 g",    shop:"palacios",   cat:"pikant", price:12, blurb:"Eichelmast-Iberico aus einer echten spanischen Tienda — hauchdünn von Hand geschnitten."},
+  {id:"c_anchoas", name:"Kantabrische Sardellen (Anchoas), Dose", shop:"palacios", cat:"welt", price:13, blurb:"Die „Belugas“ unter den Sardellen — handfiletiert aus dem Kantabrischen Meer, jahrelang haltbar."},
+  {id:"c_mezcal",  name:"Handwerks-Mezcal (kleine Charge)",   shop:"chilipaprika",cat:"spirit", price:45, blurb:"Echter Agaven-Mezcal aus Berlins Referenz-Laden für mexikanische Zutaten — rauchig, rar, ein Hingucker."},
+  {id:"c_mole",    name:"Mole-Paste Poblano im Glas",         shop:"chilipaprika",cat:"welt", price:10, blurb:"Komplexe mexikanische Schokoladen-Chili-Sauce zum Einrühren — ein Glas verwandelt jedes Hähnchen."},
+  {id:"c_gochujang",name:"Gereiftes Gochujang im Tontopf",    shop:"asialee",    cat:"welt", price:10, blurb:"Fermentierte Chili-Paste aus dem größten Korea-Laden der Mitte (~5.000 Produkte) — umami pur, lange haltbar."},
+  {id:"c_fishsauce",name:"Phú-Quốc-Fischsauce (g.U., Erstpressung)", shop:"dongxuan", cat:"welt", price:9, blurb:"EU-geschützte Erstpress-Fischsauce aus dem vietnamesischen Basar in Lichtenberg — die gute, nicht die aus dem Supermarkt."},
 ];
 
-// Verderbliches, das ins Kühlfach gehört — alles andere gilt als „haltbar".
-const PERISHABLE = new Set(["caviar","salmon","eel","comte","cheese","pralines"]);
+// Verderbliches, das ins Kühlfach gehört oder schnell gegessen wird — alles andere gilt als „haltbar".
+const PERISHABLE = new Set(["caviar","salmon","eel","comte","cheese","pralines",
+  "b_pils","br_domberger","br_sofi","br_zeit","sw_dubonheur","sw_damaskus",
+  "c_peppi","c_nduja","c_parmigiano","c_jamon"]);
 const keepsOk = id => !PERISHABLE.has(id);
 
 const PRESETS = [
@@ -433,6 +520,10 @@ const PRESETS = [
    why:"Ein bewusst schlanker Korb um die 80 € — und trotzdem kein einziges Stück von der Stange. Beweist, dass ein durchdachtes Geschenk nicht teuer sein muss, sondern besonders."},
   {id:"vorrat", name:"Der Vorratskorb", items:["trufflehoney","conservas","pasta","ferber","amaro","baumkuchen"],
    why:"Sechs Stücke, die alle Monate halten — kein Kühlfach, keine Eile. Der Korb, den man Wochen vorher einpacken kann und der eine Hochzeitsreise problemlos übersteht: Trüffelhonig, Edel-Konservas, Gragnano-Pasta, Ferber-Konfitüre, Berliner Amaro und Baumkuchen."},
+  {id:"apero", name:"Das Apéro-Brett", items:["w_natural","c_jamon","c_peppi","br_domberger","oel","sw_marzipan"],
+   why:"Alles für den ersten gemeinsamen Abend als Eheleute: eine Flasche Naturwein, Eichel-Iberico, gereifter Alpenkäse, ein knuspriger Sauerteiglaib und gutes Olivenöl. Ein komplettes Brett — frische Teile am Tag des Schenkens kaufen."},
+  {id:"hausbar", name:"Die Berliner Hausbar", items:["gin","s_rye","amaro","w_riesling","b_brlo","s_sake"],
+   why:"Eine gut sortierte Bar zum Selbstmischen: Berliner Gin, regionaler Rye-Whisky, Kräuter-Amaro, ein Spitzen-Riesling, Craft-Bier und Sake. Lauter Flaschen aus echten Berliner Läden — und alle lange haltbar."},
 ];
 
 /* ============ STATE ============ */
@@ -601,6 +692,35 @@ function syncAll(flash){
   }
 
   updateMap();
+  updateURL();
+}
+
+/* ============ SHARE VIA LINK ============ */
+// Encode current selection into the URL hash (live, no history spam).
+function updateURL(){
+  const ids = [...selected];
+  const hash = ids.length ? "#k=" + ids.join("-") : "";
+  const url = location.pathname + location.search + hash;
+  history.replaceState(null, "", url || location.pathname);
+}
+// Restore a selection from the URL hash on load. Returns true if something was loaded.
+function loadFromURL(){
+  const m = location.hash.match(/^#k=(.+)$/);
+  if(!m) return false;
+  const valid = new Set(ITEMS.map(i=>i.id));
+  const ids = decodeURIComponent(m[1]).split("-").filter(id=>valid.has(id));
+  if(!ids.length) return false;
+  selected.clear();
+  ids.forEach(id=>selected.add(id));
+  activePreset = findMatchingPreset();
+  return true;
+}
+// If the current selection exactly equals a preset, return its id (so the chip lights up).
+function findMatchingPreset(){
+  for(const p of PRESETS){
+    if(p.items.length===selected.size && p.items.every(x=>selected.has(x))) return p.id;
+  }
+  return null;
 }
 
 function renderPresets_active(){
@@ -668,15 +788,41 @@ document.getElementById("copyBtn").addEventListener("click",()=>{
 });
 function flashBtn(id,msg){
   const b=document.getElementById(id), old=b.textContent;
-  b.textContent=msg; setTimeout(()=>b.textContent=old,1400);
+  b.textContent=msg; setTimeout(()=>b.textContent=old,1600);
 }
+document.getElementById("shareBtn").addEventListener("click",()=>{
+  if(!selected.size){ flashBtn("shareBtn","Korb ist leer"); return; }
+  updateURL();
+  const link = location.href;
+  const done = ()=>flashBtn("shareBtn","✓ Link kopiert!");
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(link).then(done, ()=>fallbackCopy(link,done));
+  } else { fallbackCopy(link,done); }
+});
+function fallbackCopy(text,done){
+  try{
+    const ta=document.createElement("textarea");
+    ta.value=text; ta.style.position="fixed"; ta.style.opacity="0";
+    document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); document.body.removeChild(ta); done();
+  }catch(e){ flashBtn("shareBtn","Link steht in der Adresszeile"); }
+}
+document.getElementById("sbClose").addEventListener("click",()=>{
+  document.getElementById("sharedBanner").hidden = true;
+});
 
 /* ============ BOOT ============ */
+const cameFromLink = loadFromURL();
 renderPresets();
 renderFilters();
 renderCatalog();
 initMap();
 syncAll(false);
+if(cameFromLink){
+  document.getElementById("sharedBanner").hidden = false;
+  // jump the viewer to their basket so they see what was shared
+  setTimeout(()=>document.querySelector(".main").scrollIntoView({behavior:"smooth",block:"start"}),300);
+}
 </script>
 </body>
 </html>

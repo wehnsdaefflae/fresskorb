@@ -6,9 +6,10 @@ Built as one self-contained `index.html` (no build step) and published via Plesk
 
 ## What it does
 
-- **34 curated rare items** — from Oscietra caviar and 25-year balsamico to Rogacki's smoked eel, Sawade pralines, Berlin city honey, tree-to-bar chocolate, single-estate olive oil, plus a deep bench of **non-perishable** goods (truffle honey, bottarga, Christine Ferber confiture, iberian conservas, Gragnano pasta, Berlin amaro, Baumkuchen, François Pralus chocolate, Taiwan oolong …).
-- **"Haltbar ∞" filter** — isolate only the shelf-stable, travel-proof items; every card is badged *∞ haltbar* or *❄ frisch*.
-- **6 suggested hampers** (Ur-Berliner, Luxus, Weltreise, Handwerk, Klein & fein, **Vorratskorb**) — each with a rationale for *why* the combination is interesting. Load one, then freely recombine.
+- **61 curated rare items** across 44 walk-in shops — from Oscietra caviar and 25-year balsamico to Rogacki's smoked eel, natural wine, craft beer, German rye whisky & sake, artisan sourdough, destination chocolate, Syrian baklava, Alpine cheese, jamón ibérico, Korean gochujang and Phú-Quốc fish sauce — plus a deep bench of **non-perishable** goods (truffle honey, bottarga, Christine Ferber confiture, conservas, Gragnano pasta, Berlin amaro, Baumkuchen, marzipan, François Pralus chocolate …).
+- **"Haltbar ∞" filter** — isolate only the shelf-stable, travel-proof items (45 of 61); every card is badged *∞ haltbar* or *❄ frisch*.
+- **Shareable links** — your selection lives in the URL (`#k=…`). Hit **🔗 Teilen-Link** to copy it; opening that link restores the exact basket, lights up the matching preset, and shows a "shared basket" banner.
+- **8 suggested hampers** (Ur-Berliner, Luxus, Weltreise, Handwerk, Klein & fein, Vorratskorb, **Apéro-Brett**, **Berliner Hausbar**) — each with a rationale for *why* the combination is interesting. Load one, then freely recombine.
 - **Live receipt** — total and per-person split (two givers) recalculate instantly as you add/remove items.
 - **Shopping route** — counts the distinct shops and districts a given basket requires.
 - **Interactive map** (Leaflet + CARTO) — every source shop is plotted; the ones in your basket light up, and each marker lists the items you've chosen there.
@@ -16,7 +17,7 @@ Built as one self-contained `index.html` (no build step) and published via Plesk
 
 ## Sources
 
-Real Berlin delicatessens, market-hall vendors and artisan producers — KaDeWe Feinschmeckeretage, Rogacki, Maître Philippe & Filles, Goldhahn und Sampson, Sawade, Belyzium, The Barn, Berliner Brandstifter, Preussische Spirituosen Manufaktur, Markthalle Neun (Kumpel & Keule, Sironi, SoulSpice, Käsestände), ausberlin (Stadthonig), MYCONBINI, Paper & Tea, OEL Berlin, Trüffel Company, Sardinen.Bar, SenfSalon, Viani Alimentari, Dr. Kochan Schnapskultur and Konditorei Buchwald (Baumkuchen since 1852).
+Real Berlin delicatessens, market-hall vendors and artisan producers — KaDeWe Feinschmeckeretage, Rogacki, Maître Philippe & Filles, Goldhahn und Sampson, Sawade, Belyzium, The Barn, Berliner Brandstifter, Preussische Spirituosen Manufaktur, Markthalle Neun (Kumpel & Keule, Sironi, SoulSpice, Käsestände), ausberlin (Stadthonig), MYCONBINI, Paper & Tea, OEL Berlin, Trüffel Company, Sardinen.Bar, SenfSalon, Viani Alimentari, Dr. Kochan Schnapskultur, Konditorei Buchwald (Baumkuchen since 1852), Viniculture, Weinhandlung Suff, Planet Wein, The Muted Horn, Hops & Barley, BRLO, Stork Club House of Rye, Sake Kontor, Vom Fass, Domberger Brot-Werk, Sofi Bakery, Zeit für Brot, Rausch Schokoladenhaus, Goldhelm, Du Bonheur, Damaskus Konditorei, Wald Königsberger Marzipan, Peppi Käse Lager, Salumeria Lamuri, Salumeria da Pino, Palacios & Palacios, Chili & Paprika, Asia Market Lee and Dong Xuan Center.
 
 > Prices are realistic 2026 estimates and may vary in store. Check opening hours before visiting — some houses keep special times.
 
