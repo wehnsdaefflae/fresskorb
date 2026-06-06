@@ -273,7 +273,7 @@
   <!-- ======= PRESETS ======= -->
   <div class="sec-head">
     <span class="kicker">Vorschläge</span>
-    <h2>Fünf kuratierte Körbe</h2>
+    <h2>Sechs kuratierte Körbe</h2>
     <span class="fill"></span>
   </div>
   <div class="presets" id="presets"></div>
@@ -417,7 +417,7 @@ const ITEMS = [
 ];
 
 // Verderbliches, das ins Kühlfach gehört — alles andere gilt als „haltbar".
-const PERISHABLE = new Set(["caviar","salmon","eel","comte","cheese"]);
+const PERISHABLE = new Set(["caviar","salmon","eel","comte","cheese","pralines"]);
 const keepsOk = id => !PERISHABLE.has(id);
 
 const PRESETS = [
