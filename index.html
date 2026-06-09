@@ -278,7 +278,7 @@
     <div class="rule-fancy reveal" style="animation-delay:.16s">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9h18l-1.4 9.2a2 2 0 0 1-2 1.8H6.4a2 2 0 0 1-2-1.8L3 9Z"/><path d="M7 9 9.5 4M17 9 14.5 4"/><path d="M9 13v3M12 13v3M15 13v3"/></svg>
     </div>
-    <p class="standfirst reveal" style="animation-delay:.2s">Wähle aus <b>70 besonderen Stücken</b> von Kaviar über Naturwein bis Stadthonig — viele davon <b>lange haltbar</b> und reisefest. Starte mit den drei Körben <b>„Für Cornelius &amp; Lisa“</b> (klein bis groß, bis 200 €), lade einen der elf <b>vorgeschlagenen Körbe</b> oder kombiniere frei; die Summe und die Einkaufsroute rechnen sich <b>live</b> mit. Mit dem Filter <b>„Haltbar ∞“</b> zeigst du nur Unverderbliches — und über <b>„Teilen“</b> verschickst du deinen Korb als Link.</p>
+    <p class="standfirst reveal" style="animation-delay:.2s">Wähle aus <b>76 besonderen Stücken</b> von Kaviar über Naturwein bis Stadthonig — viele davon <b>lange haltbar</b> und reisefest. Starte mit den drei Körben <b>„Für Cornelius &amp; Lisa“</b> (klein bis groß, bis 200 €), lade einen der zwölf <b>vorgeschlagenen Körbe</b> oder kombiniere frei; die Summe und die Einkaufsroute rechnen sich <b>live</b> mit. Mit dem Filter <b>„Haltbar ∞“</b> zeigst du nur Unverderbliches — und über <b>„Teilen“</b> verschickst du deinen Korb als Link.</p>
   </header>
 
   <!-- ======= SHARED-BASKET BANNER ======= -->
@@ -291,7 +291,7 @@
   <!-- ======= PRESETS ======= -->
   <div class="sec-head">
     <span class="kicker">Vorschläge</span>
-    <h2>Elf kuratierte Körbe</h2>
+    <h2>Zwölf kuratierte Körbe</h2>
     <span class="fill"></span>
   </div>
   <div class="presets" id="presets"></div>
@@ -512,6 +512,14 @@ const ITEMS = [
   {id:"m_florina", name:"Florina-Paprika & Kalamata-Oliven (Glas)", shop:"oel",     cat:"welt", price:9, blurb:"Mediterran wie sein liebstes Salat-Mitbringsel (Feta, Süßkartoffel, Avocado) — süß-rauchige Spitzpaprika & Oliven."},
   {id:"p_bratwurst",name:"Grobe Bratwurst vom Ganztier-Metzger", shop:"markthalle", cat:"pikant", price:9, blurb:"Für den Grill am Fluss — „kannst du noch 6 Salzbrezen für die Würste kaufen?“ lässt grüßen. Am Tag kaufen."},
   {id:"h_hanf",    name:"Kulinarisches Hanf-Trio (Samen · Öl · Schoko)", shop:"hanfmuseum", cat:"berlin", price:14, blurb:"Lebensmittel-Hanf aus dem Berliner Hanf Museum — der augenzwinkernde, völlig legale Gruß an „Cpt. Spliffhook“."},
+
+  /* — Wein aus Surf-Regionen (Anregung eines Freundes: „Wein aus Gegenden, wo man gut surfen kann — oder gar ein Port?“) — */
+  {id:"w_vinhoverde",name:"Vinho Verde (Portugal, Atlantikküste)", shop:"viniculture", cat:"wein", price:14, blurb:"Spritzig-leichter Atlantik-Weißwein aus Nordportugal — Surf-Land von Peniche bis Ericeira, perfekt für den Tag nach der Welle."},
+  {id:"w_douro",    name:"Douro-Rotwein (Portugal)",            shop:"viniculture", cat:"wein", price:24, blurb:"Kräftiger, dunkler Douro-Rotwein aus Portugal — dem Surf-Reiseland aus dem Verlauf, jetzt in der Flasche."},
+  {id:"w_port",     name:"Tawny Port, 10 Jahre (Portugal)",     shop:"viniculture", cat:"wein", price:28, blurb:"„Oder gar ein Port?“ — gereifter Tawny aus dem Douro, nussig & süß, der feierliche Absacker nach dem Hochzeitsessen."},
+  {id:"w_albarino", name:"Albariño Rías Baixas (Galicien)",     shop:"viniculture", cat:"wein", price:19, blurb:"Salzig-frischer Albariño von Spaniens grüner Atlantikküste — Surfspots wie Pantín gleich um die Ecke."},
+  {id:"w_margaret", name:"Margaret River (Australien)",         shop:"viniculture", cat:"wein", price:26, blurb:"Aus der Weltklasse-Surfregion schlechthin: Margaret River vereint legendäre Reefbreaks und Spitzenwein in einer Adresse."},
+  {id:"w_stellenbosch",name:"Stellenbosch (Südafrika)",        shop:"viniculture", cat:"wein", price:22, blurb:"Sonniger Kap-Wein aus Stellenbosch — keine zwei Stunden von den Wellen bei Kapstadt und Jeffreys Bay entfernt."},
 ];
 
 // Verderbliches, das ins Kühlfach gehört oder schnell gegessen wird — alles andere gilt als „haltbar".
@@ -537,6 +545,8 @@ const PRESETS = [
    why:"Was die fränkische Wirtsküche zu Hause nicht hergibt: koreanisches Gochujang, vietnamesische Phú-Quốc-Fischsauce, ein rauchiger Mezcal, mexikanische Mole und Gragnano-Bronzepasta. Berlin bringt die Welt in die Küche."},
   {id:"p_brunch", name:"Sonntags-Brunch zu zweit", items:["barn","honey","ferber","br_domberger","sw_dubonheur"],
    why:"Ein freier Morgen abseits des eigenen Gasthofs: Specialty-Filterkaffee, Berliner Stadthonig, Christine-Ferber-Konfitüre, ein Domberger-Sauerteiglaib und feine Macarons. Das Frühstück, das sie sonst für ihre Gäste machen — diesmal für sich."},
+  {id:"vino", name:"Vino & Wellen", items:["w_vinhoverde","w_douro","w_port","w_albarino","w_margaret","w_stellenbosch"],
+   why:"Die Idee eines Freundes — für den Surfer Cornelius lauter Weine aus Gegenden, wo man gut surfen kann: Vinho Verde & Douro aus Portugal (sein Surf-Revier), Albariño aus Galicien, Margaret River aus Australien, Stellenbosch vom Kap — und, ganz wie gewünscht, ein gereifter Tawny Port zum Anstoßen."},
   {id:"klassiker", name:"Der Ur-Berliner", items:["salmon","eel","gin","honey","pralines"],
    why:"Fünf Häuser, die es nur hier gibt: Rogackis Räucherkammer von 1928, Sawades Pralinen seit 1880, Gin mit Berliner Botanicals und Honig aus Stadtbienen. Ein Korb, den man buchstäblich nirgends sonst auf der Welt packen kann."},
   {id:"luxus", name:"Das Luxus-Körbchen", items:["caviar","balsamico","sardines","comte","gyokuro"],

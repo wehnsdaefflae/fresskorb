@@ -6,13 +6,13 @@ Built as one self-contained `index.html` (no build step) and published via Plesk
 
 ## What it does
 
-- **70 curated rare items** across 46 walk-in shops — from Oscietra caviar and 25-year balsamico to Rogacki's smoked eel, natural wine, craft beer, German rye whisky & sake, artisan sourdough, destination chocolate, Syrian baklava, Alpine cheese, jamón ibérico, Korean gochujang and Phú-Quốc fish sauce — plus a deep bench of **non-perishable** goods (truffle honey, bottarga, Christine Ferber confiture, conservas, Gragnano pasta, Berlin amaro, Baumkuchen, marzipan, François Pralus chocolate …).
+- **76 curated rare items** across 46 walk-in shops — from Oscietra caviar and 25-year balsamico to Rogacki's smoked eel, natural wine, craft beer, German rye whisky & sake, artisan sourdough, destination chocolate, Syrian baklava, Alpine cheese, jamón ibérico, Korean gochujang and Phú-Quốc fish sauce — plus a deep bench of **non-perishable** goods (truffle honey, bottarga, Christine Ferber confiture, conservas, Gragnano pasta, Berlin amaro, Baumkuchen, marzipan, François Pralus chocolate …).
 - **Tailored to the couple** — Cornelius & Lisa actually *run* the 8th-generation **Hotel Brauerei Gasthof Höhn** near Bamberg (their own wood-fired Kellerbier, schnapps and Schäuferla), so the baskets deliberately bring them the cosmopolitan things they *can't* pour or cook at home, plus personal in-jokes from years of chat history (a home-sushi night, döner "mit allem", the "Cpt. Spliffhook" hemp wink) — and skip harsh schnaps and stodgy desserts they dislike.
   - **Three price tiers:** **"Für Cornelius & Lisa · klein / mittel / groß"** (≈ €76 / €141 / €197, up to €200).
-  - **Five themed baskets for them:** *Bier für die Brauer* (world beer styles they don't brew), *Heim-Sushi-Abend*, *Döner & Mezze daheim*, *Welt-Speisekammer*, *Sonntags-Brunch zu zweit*.
-- **"Haltbar ∞" filter** — isolate only the shelf-stable, travel-proof items (53 of 70); every card is badged *∞ haltbar* or *❄ frisch*.
+  - **Six themed baskets for them:** *Bier für die Brauer* (world beer styles they don't brew), *Heim-Sushi-Abend*, *Döner & Mezze daheim*, *Welt-Speisekammer*, *Sonntags-Brunch zu zweit*, and *Vino & Wellen* — wines from surf regions (Portugal, Galicia, Margaret River, Stellenbosch) plus a Tawny Port, a nod to Cornelius's surfing.
+- **"Haltbar ∞" filter** — isolate only the shelf-stable, travel-proof items (59 of 76); every card is badged *∞ haltbar* or *❄ frisch*.
 - **Shareable links** — your selection lives in the URL (`#k=…`). Hit **🔗 Teilen-Link** to copy it; opening that link restores the exact basket, lights up the matching preset, and shows a "shared basket" banner.
-- **11 suggested hampers** — 3 personal tiers + 5 themed baskets for the couple + 3 Berlin classics (Ur-Berliner, Luxus-Körbchen, Vorratskorb) — each with a rationale for *why* the combination is interesting. Load one, then freely recombine.
+- **12 suggested hampers** — 3 personal tiers + 6 themed baskets for the couple + 3 Berlin classics (Ur-Berliner, Luxus-Körbchen, Vorratskorb) — each with a rationale for *why* the combination is interesting. Load one, then freely recombine.
 - **Live receipt** — total and per-person split (two givers) recalculate instantly as you add/remove items.
 - **Shopping route** — counts the distinct shops and districts a given basket requires.
 - **Interactive map** (Leaflet + CARTO) — every source shop is plotted; the ones in your basket light up, and each marker lists the items you've chosen there.
